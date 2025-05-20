@@ -1,26 +1,20 @@
 from fastapi import FastAPI
+from controllers.user_controller import user_router
 from mosquitto import mosquitto
+from events.handlers.process_handler import handle_message
+from config.settings import app_settings
+app = FastAPI(
+    title=app_settings.PROJECT_NAME,
+    debug=app_settings.DEBUG
+)
 
-message_received = []
-
-app = FastAPI()
-
-def handle_message(payload):
-    message_received.append(payload)
-    print("✅ Callback executado com mensagem:", payload)
-
-def handle_message_test(payload):
-    message_received.append(payload)
-    print("procesando no banco de dados: ", payload)
-
+app.include_router(user_router)
 
 @app.on_event("startup")
-async def startup_event():
-    mosquitto.subscribe("test/topic", handle_message)
-    mosquitto.subscribe("db/test", handle_message_test)
+async def startup_event():    
+    mosquitto.subscribe("db/test", handle_message)
+    mosquitto.subscribe("possiveis_erros", handle_message)
 
-
-
-@app.get("/")
-async def root():
-    return {"message": "Hello World", "message_received": message_received}
+@app.on_event("shutdown")
+async def shutdown_event():
+    pass

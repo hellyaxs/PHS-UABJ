@@ -83,6 +83,7 @@ demo_mosquitto/
 │   ├── services/         # Serviços e lógica de aplicação
 │   ├── events/           # Handlers de eventos e mensagens MQTT
 │   ├── config/           # Configurações da aplicação
+│   ├── migrations/       # Migrations do banco de dados
 │   └── main.py           # Ponto de entrada da aplicação
 ├── docs/                 # Documentação adicional
 ├── Dockerfile
@@ -90,6 +91,50 @@ demo_mosquitto/
 ├── requirements.txt
 ├── .env                  # Variaveis de ambiente do projeto
 └── README.md
+```
+
+## 🗃️ Migrations do Banco de Dados
+
+O projeto utiliza SQLAlchemy com Alembic para gerenciar as migrations do banco de dados. Para executar as migrations, siga os passos abaixo:
+
+### Gerar uma nova migration
+
+Para criar uma nova migration após alterar os modelos:
+
+```bash
+cd src && alembic revision --autogenerate -m 'descrição da migration'
+```
+
+### Aplicar as migrations
+
+Para aplicar todas as migrations pendentes:
+
+```bash
+cd src && alembic upgrade head
+```
+
+### Reverter a última migration
+
+Para reverter a última migration aplicada:
+
+```bash
+cd src && alembic downgrade -1
+```
+
+### Verificar status das migrations
+
+Para verificar quais migrations foram aplicadas:
+
+```bash
+cd src && alembic current
+```
+
+### Listar histórico de migrations
+
+Para ver o histórico completo de migrations:
+
+```bash
+cd src && alembic history
 ```
 
 ## 🤝 Como Contribuir

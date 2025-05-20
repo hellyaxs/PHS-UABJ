@@ -1,0 +1,7 @@
+demo/
+.env
+.env.**
+.git/
+.gitignore
+mosquitto.conf
+README.md
