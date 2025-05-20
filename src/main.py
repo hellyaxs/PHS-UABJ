@@ -1,8 +1,9 @@
 from fastapi import FastAPI
-from controllers.user_controller import user_router
-from mosquitto import mosquitto
-from events.handlers.process_handler import handle_message
-from config.settings import app_settings
+from src.controllers.user_controller import user_router
+from src.config.mosquitto import mosquitto
+from src.events.handlers.process_handler import handle_message
+from src.config.settings import app_settings
+
 app = FastAPI(
     title=app_settings.PROJECT_NAME,
     debug=app_settings.DEBUG
