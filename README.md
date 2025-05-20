@@ -77,19 +77,22 @@ fastapi dev src/main.py
 
 ```tree
 demo_mosquitto/
+├── migrations/           # Migrations do banco de dados
 ├── src/
 │   ├── domain/           # Entidades e regras de negócio
 │   ├── repository/       # Camada de acesso a dados
 │   ├── services/         # Serviços e lógica de aplicação
 │   ├── events/           # Handlers de eventos e mensagens MQTT
-│   ├── config/           # Configurações da aplicação
-│   ├── migrations/       # Migrations do banco de dados
+│   ├── config/           # Configurações da aplicação 
+│   │     ├── database/
+│   │     ├── mosquitto/
+│   │     └── settings.py 
 │   └── main.py           # Ponto de entrada da aplicação
 ├── docs/                 # Documentação adicional
 ├── Dockerfile
 ├── docker-compose.yaml
 ├── requirements.txt
-├── .env                  # Variaveis de ambiente do projeto
+├── .env.example          # Variaveis de ambiente do projeto
 └── README.md
 ```
 
