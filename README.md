@@ -58,7 +58,7 @@ pip install -r requirements.txt
 
 4. Execute o projeto:
 ```bash
-python src/main.py
+fastapi dev src/main.py
 ```
 
 ## 🔧 Tecnologias Utilizadas
