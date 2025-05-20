@@ -12,13 +12,12 @@ class DatabaseSettings:
     POSTGRES_USER = os.getenv("POSTGRES_USER", "postgres")
     POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD", "postgres")
     POSTGRES_DB = os.getenv("POSTGRES_DB", "postgres")
-    POSTGRES_HOST = os.getenv("POSTGRES_HOST", "postgres_db")
+    POSTGRES_HOST = os.getenv("POSTGRES_HOST", "localhost")
     POSTGRES_PORT = os.getenv("POSTGRES_PORT", "5432")
     
     @classmethod
     def get_database_url(cls) -> str:
         return f"postgresql://{cls.POSTGRES_USER}:{cls.POSTGRES_PASSWORD}@{cls.POSTGRES_HOST}:{cls.POSTGRES_PORT}/{cls.POSTGRES_DB}"
-
 
 class MQTTSettings:
     MQTT_BROKER = os.getenv("MQTT_BROKER", "localhost")
