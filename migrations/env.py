@@ -14,12 +14,7 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from src.models.user import User
-from src.models.curso import Curso
-from src.models.equipamento import Equipamento
-from src.models.funcionario import Funcionario
-from src.models.usoequipamento import UsoEquipamento
-from src.models.defeito import Defeito
+from src.models import *
 from src.config.database.database import Base
 
 # this is the Alembic Config object, which provides
