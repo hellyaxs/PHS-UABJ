@@ -4,6 +4,12 @@ from src.config.mosquitto import mosquitto
 from src.events.handlers.process_handler import handle_message
 from src.config.settings import app_settings
 
+from src.config.database.database import Base
+from src.config.database.database import engine
+from src.models import curso, defeito, equipamento, funcionario, user, usoequipamento
+
+Base.metadata.create_all(bind=engine)
+
 app = FastAPI(
     title=app_settings.PROJECT_NAME,
     debug=app_settings.DEBUG

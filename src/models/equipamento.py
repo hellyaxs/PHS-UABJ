@@ -6,8 +6,8 @@ from sqlalchemy import ForeignKey
 class Equipamento(Base):
     __tablename__ = "equipamento"
     
-    codigo = Column(String(8), primary_key=True, index=True)
-    nome = Column(String(100))
+    codigo_tombamento = Column(String(50), primary_key=True, index=True) 
+    codigo_tag = Column(String(10), default="")  
     modelo = Column(String(100))
     marca = Column(String(100))
     cor = Column(String(30))
@@ -17,4 +17,5 @@ class Equipamento(Base):
     defeitos = relationship("Defeito", back_populates="equipamento")
     
     def __repr__(self):
-        return f"Equipamento(codigo={self.codigo}, nome={self.nome})"
+        return f"Equipamento(codigo_tombamento={self.codigo_tombamento}, modelo={self.modelo})"
+    

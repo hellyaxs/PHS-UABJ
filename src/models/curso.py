@@ -8,4 +8,7 @@ class Curso(Base):
     
     id = Column(Integer, primary_key=True, index=True)
     nome = Column(String(150), nullable=False)
+    
+    # Adicionar o relacionamento bidirecional
+    funcionarios = relationship("Funcionario", back_populates="curso")
 
