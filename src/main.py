@@ -3,11 +3,19 @@ from src.controllers import all_routers
 from src.config.mosquitto import mosquitto
 from src.events.handlers.process_handler import handle_message
 from src.config.settings import app_settings
+from fastapi.middleware.cors import CORSMiddleware
 from src.websocket.card_socket import router as websocket_route
 
 app = FastAPI(
     title=app_settings.PROJECT_NAME,
     debug=app_settings.DEBUG
+)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 [app.include_router(router) for router in all_routers]
