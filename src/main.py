@@ -3,6 +3,7 @@ from src.controllers import all_routers
 from src.config.mosquitto import mosquitto
 from src.events.handlers.process_handler import handle_message
 from src.config.settings import app_settings
+from src.websocket.card_socket import router as websocket_route
 
 app = FastAPI(
     title=app_settings.PROJECT_NAME,
@@ -10,6 +11,8 @@ app = FastAPI(
 )
 
 [app.include_router(router) for router in all_routers]
+app.include_router(websocket_route)
+
 
 @app.on_event("startup")
 async def startup_event():    
