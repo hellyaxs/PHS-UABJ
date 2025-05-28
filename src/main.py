@@ -6,6 +6,12 @@ from src.config.settings import app_settings
 from fastapi.middleware.cors import CORSMiddleware
 from src.websocket.card_socket import router as websocket_route
 
+from src.config.database.database import Base
+from src.config.database.database import engine
+from src.models import curso, defeito, equipamento, funcionario, user, usoequipamento
+
+Base.metadata.create_all(bind=engine)
+
 app = FastAPI(
     title=app_settings.PROJECT_NAME,
     debug=app_settings.DEBUG

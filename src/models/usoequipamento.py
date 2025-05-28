@@ -8,7 +8,7 @@ class UsoEquipamento(Base):
     __tablename__ = "uso_equipamento"
     
     protocolo = Column(Integer, primary_key=True, index=True)
-    equipamento_codigo = Column(String(8), ForeignKey("equipamento.codigo"), nullable=False)
+    equipamento_codigo = Column(String(50), ForeignKey("equipamento.codigo_tombamento"), nullable=False)
     funcionario_cpf = Column(String(11), ForeignKey("funcionario.cpf"), nullable=False)
     data_aluguel = Column(DateTime, nullable=False, default=datetime.now())
     data_devolucao = Column(DateTime, nullable=True)
