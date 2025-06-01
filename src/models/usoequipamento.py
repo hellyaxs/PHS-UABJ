@@ -1,8 +1,9 @@
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, DateTime, Boolean, func
+from sqlalchemy import Column, Integer, String, DateTime, Enum as SQLEnum
 from src.config.database.database import Base
 from sqlalchemy.orm import relationship
 from sqlalchemy import ForeignKey
+from .enums.status_de_uso import StatusUsoEquipamento
 
 class UsoEquipamento(Base):
     __tablename__ = "uso_equipamento"
@@ -12,6 +13,7 @@ class UsoEquipamento(Base):
     funcionario_cpf = Column(String(11), ForeignKey("funcionario.cpf"), nullable=False)
     data_aluguel = Column(DateTime, nullable=False, default=datetime.now())
     data_devolucao = Column(DateTime, nullable=True)
+    status = Column(SQLEnum(StatusUsoEquipamento), nullable=False, default=StatusUsoEquipamento.ALOCADO)
     
     # Relacionamentos
     equipamento = relationship("Equipamento", back_populates="usos")

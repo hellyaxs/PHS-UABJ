@@ -6,7 +6,6 @@ class CartaoBase(BaseModel):
     rfid: str
     nivel_acesso: int
     status: str
-    ultima_entrada: datetime | None = None
 
 class CartaoCreate(CartaoBase):
     pass

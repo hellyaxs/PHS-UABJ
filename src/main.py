@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from src.controllers import all_routers
 from src.config.mosquitto import mosquitto
-from src.events.handlers.process_handler import handle_message
+from src.events.handlers.process_handler import handle_message, handler_locacao_equipamento
 from src.config.settings import app_settings
 from fastapi.middleware.cors import CORSMiddleware
 from src.websocket.card_socket import router as websocket_route
@@ -31,7 +31,7 @@ app.include_router(websocket_route)
 @app.on_event("startup")
 async def startup_event():    
     mosquitto.subscribe("db/test", handle_message)
-    mosquitto.subscribe("possiveis_erros", handle_message)
+    mosquitto.subscribe("alocacao_equipamento", handler_locacao_equipamento)
 
 @app.on_event("shutdown")
 async def shutdown_event():

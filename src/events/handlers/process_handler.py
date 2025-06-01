@@ -1,6 +1,10 @@
-message_received = []
-
+from datetime import datetime
+from src.models.enums.status_de_uso import StatusUsoEquipamento
+from src.models.usoequipamento import UsoEquipamento
 from src.websocket.card_socket import active_connections
+from src.config.database.database import get_db
+import json
+from sqlalchemy.orm import Session
 
 async def send_message_to_clients(message: str):
     """
@@ -14,11 +18,21 @@ async def send_message_to_clients(message: str):
 
 
 async def handle_message(payload):
-    message_received.append(payload)
     print("✅ Callback executado com mensagem:", payload)
     await send_message_to_clients(payload)
 
-async def handle_message_test(payload):
-    message_received.append(payload)
+async def handler_locacao_equipamento(payload):
     print("procesando no banco de dados: ", payload)
-    await send_message_to_clients(payload)
+    if isinstance(payload, str):
+        payload = json.loads(payload)
+    
+    db = next(get_db())
+    novo_uso_equipamento = UsoEquipamento(
+        equipamento_codigo=payload["codigo_tombamento"],
+        funcionario_cpf=payload["cpf"],
+        data_aluguel=datetime.now(),
+        status=StatusUsoEquipamento.ALOCADO
+    )
+    db.add(novo_uso_equipamento)
+    db.commit()
+    db.refresh(novo_uso_equipamento)
