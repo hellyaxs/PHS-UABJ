@@ -8,7 +8,7 @@ from src.websocket.card_socket import router as websocket_route
 
 from src.config.database.database import Base
 from src.config.database.database import engine
-from src.models import curso, defeito, equipamento, funcionario, user, usoequipamento
+from src.models import *
 
 Base.metadata.create_all(bind=engine)
 
