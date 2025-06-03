@@ -1,9 +1,10 @@
-from fastapi import FastAPI
-from src.controllers import all_routers
+from fastapi import Depends, FastAPI
+from src.config.cors import configure_cors
+from src.config.jwt import get_current_user
+from src.controllers import all_routers, protected_routers
 from src.config.mosquitto import mosquitto
 from src.events.handlers.process_handler import handle_message, handler_locacao_equipamento
 from src.config.settings import app_settings
-from fastapi.middleware.cors import CORSMiddleware
 from src.websocket.card_socket import router as websocket_route
 
 from src.config.database.database import Base
@@ -14,18 +15,20 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title=app_settings.PROJECT_NAME,
-    debug=app_settings.DEBUG
-)
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    debug=app_settings.DEBUG,
 )
 
+
+# CORS
+configure_cors(app)
+
+#Rotas Públicas
 [app.include_router(router) for router in all_routers]
 app.include_router(websocket_route)
+
+# Rotas protegidas por autenticação
+for router in protected_routers:
+    app.include_router(router, dependencies=[Depends(get_current_user)])
 
 
 @app.on_event("startup")

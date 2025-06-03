@@ -8,7 +8,8 @@ from src.schemas.cargo import CargoCreate, CargoResponse, CargoUpdate
 
 router_cargo = APIRouter(
     prefix="/cargos",
-    tags=["cargos"]
+    tags=["cargos"], 
+
 )
 
 @router_cargo.post("/", response_model=CargoResponse, status_code=status.HTTP_201_CREATED)

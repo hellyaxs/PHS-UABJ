@@ -1,13 +1,15 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from src.config.database.database import get_db
+from src.config.jwt import get_current_user
 from src.models.funcionario import Funcionario
 from src.models.curso import Curso
 from src.schemas.funcionario import FuncionarioCreate, Funcionario as FuncionarioSchema
 
 funcionario_router = APIRouter(
     prefix="/funcionarios",
-    tags=["funcionarios"]
+    tags=["funcionarios"], 
+    dependencies=[Depends(get_current_user)]
 )
 
 @funcionario_router.post("/", response_model=FuncionarioSchema)

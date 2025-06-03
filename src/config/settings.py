@@ -7,7 +7,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 env_path = BASE_DIR / '.env'
 load_dotenv(dotenv_path=env_path)
 
-
 class DatabaseSettings:
     POSTGRES_USER = os.getenv("POSTGRES_USER", "postgres")
     POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD", "carlos")
@@ -24,7 +23,6 @@ class MQTTSettings:
     MQTT_PORT = int(os.getenv("MQTT_PORT", "1883"))
     MQTT_USERNAME = os.getenv("MQTT_USERNAME", "")
     MQTT_PASSWORD = os.getenv("MQTT_PASSWORD", "")
-
 
 class AppSettings:
     DEBUG = os.getenv("DEBUG", "False").lower() == "true"
