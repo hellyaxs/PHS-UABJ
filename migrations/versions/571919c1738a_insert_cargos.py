@@ -20,23 +20,32 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    cargo_table = table('cargo',
-                        column('id', sa.Integer),
-                        column('nome', sa.String(100))
-                       )
+    op.create_table('cargo',
+        sa.Column('id', sa.Integer(), nullable=False),
+        sa.Column('nome', sa.String(length=150), nullable=False),
+        sa.PrimaryKeyConstraint('id')
+    )
+    op.create_index(op.f('ix_cargo_id'), 'cargo', ['id'], unique=False)
     
-    op.bulk_insert(cargo_table, [
-        {'id': 1, 'nome': 'Professor Titular'},
-        {'id': 2, 'nome': 'Professor Associado'},
-        {'id': 3, 'nome': 'Professor Adjunto'},
-        {'id': 4, 'nome': 'Professor Assistente'},
-        {'id': 5, 'nome': 'Professor Auxiliar'},
-        {'id': 6, 'nome': 'Professor Substituto'},
-        {'id': 7, 'nome': 'Coordenador de Curso'},
-        {'id': 8, 'nome': 'Chefe de Departamento'},
-        {'id': 9, 'nome': 'Diretor de Unidade'},
-    ])
+    op.bulk_insert(
+        sa.table('cargo',
+            sa.column('id', sa.Integer),
+            sa.column('nome', sa.String)
+        ),
+        [
+            {'id': 1, 'nome': 'Professor Titular'},
+            {'id': 2, 'nome': 'Professor Associado'},
+            {'id': 3, 'nome': 'Professor Adjunto'},
+            {'id': 4, 'nome': 'Professor Assistente'},
+            {'id': 5, 'nome': 'Professor Auxiliar'},
+            {'id': 6, 'nome': 'Professor Substituto'},
+            {'id': 7, 'nome': 'Coordenador de Curso'},
+            {'id': 8, 'nome': 'Chefe de Departamento'},
+            {'id': 9, 'nome': 'Diretor de Unidade'}
+        ]
+    )
 
 
 def downgrade() -> None:
-    pass
+    op.drop_index(op.f('ix_cargo_id'), table_name='cargo')
+    op.drop_table('cargo')
