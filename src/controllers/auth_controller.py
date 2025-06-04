@@ -71,5 +71,5 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
         401: {"detail": "Token inválido ou expirado"},
     }
 )
-def verify_token(current_user: User = Depends(get_current_user)):
+def is_valid_token(current_user: User = Depends(get_current_user)):
     return UserResponse.from_orm(current_user)
