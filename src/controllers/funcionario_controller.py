@@ -9,7 +9,6 @@ from src.schemas.funcionario import FuncionarioCreate, Funcionario as Funcionari
 funcionario_router = APIRouter(
     prefix="/funcionarios",
     tags=["funcionarios"], 
-    dependencies=[Depends(get_current_user)]
 )
 
 @funcionario_router.post("/", response_model=FuncionarioSchema)

@@ -8,7 +8,6 @@ from src.schemas.curso import CursoCreate, Curso as CursoSchema
 curso_router = APIRouter(
     prefix="/cursos",
     tags=["cursos"],
-    dependencies=[Depends(get_current_user)]
 )
 
 @curso_router.post("/", response_model=CursoSchema)
