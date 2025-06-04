@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Body, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from passlib.context import CryptContext
-from src.config.jwt import create_access_token
+from src.config.jwt import create_access_token, get_current_user
 from src.models.user import User
-from src.schemas.auth import LoginRequest, Token
+from src.schemas.auth import LoginRequest, LoginResponse, Token, UserResponse
 from src.config.database.database import get_db
 from sqlalchemy.orm import Session
 
@@ -22,20 +22,22 @@ def verify_password(plain_password, hashed_password):
 def get_password_hash(password: str):
     return pwd_context.hash(password)
 
-
-@router_auth.post("/login", response_model=Token)
+@router_auth.post("/login", response_model=LoginResponse)
 def login(login_data: LoginRequest = Body(...), db: Session = Depends(get_db)):
     user = db.query(User).filter(User.email == login_data.username).first()
     
     if not user or not verify_password(login_data.password, user.hashed_password):
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
+            status_code=status.HTTP_401_UNAUTHORIZED, 
             detail="Credenciais inválidas",
             headers={"WWW-Authenticate": "Bearer"},
         )
     
     token = create_access_token({"sub": user.email})
-    return {"access_token": token, "token_type": "bearer"}
+    user_response = UserResponse.from_orm(user)
+    return {"access_token": token, "token_type": "bearer", "user": user_response}
+
+
 
 @router_auth.post("/register", response_model=UserCreate)
 def register(user: UserCreate, db: Session = Depends(get_db)):
@@ -59,3 +61,15 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
     db.refresh(db_user)
     
     return user
+
+@router_auth.get(
+    "/verify-token",
+    response_model=UserResponse,
+    status_code=status.HTTP_200_OK,
+    responses={
+        200: {"detail": "Token válido"},
+        401: {"detail": "Token inválido ou expirado"},
+    }
+)
+def is_valid_token(current_user: User = Depends(get_current_user)):
+    return UserResponse.from_orm(current_user)
