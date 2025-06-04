@@ -10,7 +10,7 @@ class UsoEquipamento(Base):
     
     protocolo = Column(Integer, primary_key=True, index=True)
     equipamento_codigo = Column(String(50), ForeignKey("equipamento.codigo_tombamento"), nullable=False)
-    funcionario_email = Column(String(11), ForeignKey("funcionario.email"), nullable=False)
+    funcionario_id = Column(Integer, ForeignKey("funcionario.id"), nullable=False)
     data_aluguel = Column(DateTime, nullable=False, default=datetime.now())
     data_devolucao = Column(DateTime, nullable=True)
     status = Column(SQLEnum(StatusUsoEquipamento), nullable=False, default=StatusUsoEquipamento.ALOCADO)

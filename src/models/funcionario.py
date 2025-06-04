@@ -6,6 +6,7 @@ from sqlalchemy import ForeignKey
 class Funcionario(Base):
     __tablename__ = "funcionario"
     
+    id = Column(Integer, primary_key=True, index=True)
     email = Column(String(50), primary_key=True, index=True)
     codigo_cartao = Column(String(10))
     nome = Column(String(150), nullable=False)

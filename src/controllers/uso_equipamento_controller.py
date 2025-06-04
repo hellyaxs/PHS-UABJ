@@ -4,6 +4,8 @@ from typing import List, Optional
 from src.config.database.database import get_db
 from src.models.equipamento import Equipamento
 from src.models.funcionario import Funcionario
+from src.models.curso import Curso
+from src.models.cargo import Cargo
 from src.models.usoequipamento import UsoEquipamento
 from src.models.enums.status_de_uso import StatusUsoEquipamento
 from pydantic import BaseModel
@@ -13,6 +15,20 @@ locacao_router = APIRouter(
     prefix="/uso-equipamento",
     tags=["uso-equipamento"]
 )
+
+class CursoResponse(BaseModel):
+    id: int
+    nome: str
+
+    class Config:
+        from_attributes = True
+
+class CargoResponse(BaseModel):
+    id: int
+    nome: str
+
+    class Config:
+        from_attributes = True
 
 class EquipamentoResponse(BaseModel):
     codigo_tombamento: str
@@ -25,10 +41,12 @@ class EquipamentoResponse(BaseModel):
         from_attributes = True
 
 class FuncionarioResponse(BaseModel):
-    cpf: str
+    id: int
+    email: str
     codigo_cartao: Optional[str] = None
     nome: str
-    curso_id: int
+    curso: Optional[CursoResponse] = None
+    cargo: Optional[CargoResponse] = None
 
     class Config:
         from_attributes = True
@@ -36,7 +54,6 @@ class FuncionarioResponse(BaseModel):
 class UsoEquipamentoResponse(BaseModel):
     protocolo: int
     equipamento_codigo: str
-    funcionario_cpf: str
     data_aluguel: datetime
     data_devolucao: Optional[datetime] = None
     status: StatusUsoEquipamento
@@ -71,15 +88,15 @@ async def obter_uso_equipamento(
         raise HTTPException(status_code=404, detail="Registro de uso não encontrado")
     return uso
 
-@locacao_router.get("/funcionario/{cpf}", response_model=List[UsoEquipamentoResponse])
+@locacao_router.get("/funcionario/{id}", response_model=List[UsoEquipamentoResponse])
 async def listar_usos_por_funcionario(
-    cpf: str,
+    id: int,
     db: Session = Depends(get_db)
 ):
     """
     Lista todos os registros de uso de equipamento de um funcionário específico.
     """
-    usos = db.query(UsoEquipamento).filter(UsoEquipamento.funcionario_cpf == cpf).all()
+    usos = db.query(UsoEquipamento).filter(UsoEquipamento.funcionario_id == id).all()
     return usos
 
 @locacao_router.get("/equipamento/{codigo}", response_model=List[UsoEquipamentoResponse])

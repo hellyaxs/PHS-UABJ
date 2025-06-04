@@ -8,7 +8,6 @@ class Cargo(Base):
     id = Column(Integer, primary_key=True, index=True)
     nome = Column(String(100), nullable=False)
     
-    # Relacionamentos
     funcionarios = relationship("Funcionario", back_populates="cargo")
     
     def __repr__(self):

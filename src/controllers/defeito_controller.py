@@ -37,7 +37,7 @@ def ler_defeito(defeito_id: int, db: Session = Depends(get_db)):
 @defeito_router.get("/equipamento/{equipamento_codigo}", response_model=list[DefeitoSchema])
 def listar_defeitos_equipamento(equipamento_codigo: str, db: Session = Depends(get_db)):
     # Verifica se o equipamento existe
-    equipamento = db.query(Equipamento).filter(Equipamento.codigo == equipamento_codigo).first()
+    equipamento = db.query(Equipamento).filter(Equipamento.codigo_tombamento == equipamento_codigo).first()
     if not equipamento:
         raise HTTPException(status_code=404, detail="Equipamento não encontrado")
     

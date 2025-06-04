@@ -9,7 +9,7 @@ class Cartao(Base):
     nome: str = Column(String(150), nullable=False)
     rfid: str = Column(String(16), nullable=False)
     nivel_acesso: int = Column(Integer, nullable=False)
-    status: str = Column(String(10), nullable=False)
+    status: str = Column(String(50), nullable=False)
     ultima_entrada: datetime = Column(DateTime, nullable=True)
     created_at: datetime = Column(DateTime, default=datetime.now)
 
