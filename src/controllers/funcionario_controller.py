@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from src.config.database.database import get_db
-from src.config.jwt import get_current_user
 from src.models.funcionario import Funcionario
 from src.models.curso import Curso
 from src.schemas.funcionario import FuncionarioCreate, Funcionario as FuncionarioSchema
@@ -14,19 +13,18 @@ funcionario_router = APIRouter(
 @funcionario_router.post("/", response_model=FuncionarioSchema)
 def criar_funcionario(funcionario: FuncionarioCreate, db: Session = Depends(get_db)):
     # Verifica se o CPF já está cadastrado
-    if db.query(Funcionario).filter(Funcionario.cpf == funcionario.cpf).first():
+    if db.query(Funcionario).filter(Funcionario.email == funcionario.email).first():
         raise HTTPException(status_code=400, detail="CPF já cadastrado")
     
-    # Verifica se o curso existe
     curso = db.query(Curso).filter(Curso.id == funcionario.curso_id).first()
     if not curso:
         raise HTTPException(status_code=404, detail="Curso não encontrado")
     
     novo_funcionario = Funcionario(
-        cpf=funcionario.cpf,
+        email=funcionario.email,
         codigo_cartao=funcionario.codigo_cartao,
-        nome=funcionario.nome,
-        curso_id=funcionario.curso_id
+        curso_id=funcionario.curso_id,
+        cargo_id=funcionario.cargo_id,
     )
     
     db.add(novo_funcionario)
