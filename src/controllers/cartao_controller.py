@@ -4,6 +4,7 @@ from typing import List
 
 from src.config.database.database import get_db
 from src.models.cartao import Cartao
+from src.models.funcionario import Funcionario
 from src.schemas.cartao import CartaoCreate, CartaoUpdate, CartaoInDB
 
 router_cartao = APIRouter(
@@ -26,9 +27,9 @@ def create_cartao(cartao: CartaoCreate, db: Session = Depends(get_db)):
 @router_cartao.get("/", response_model=List[CartaoInDB])
 def read_cartoes(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     """
-    Retorna a lista de cartões.
+    Retorna a lista de cartões não associados a funcionários.
     """
-    cartoes = db.query(Cartao).offset(skip).limit(limit).all()
+    cartoes = db.query(Cartao).outerjoin(Funcionario).filter(Funcionario.codigo_cartao == None).offset(skip).limit(limit).all()
     return cartoes
 
 @router_cartao.get("/{cartao_id}", response_model=CartaoInDB)
