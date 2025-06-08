@@ -14,7 +14,7 @@ funcionario_router = APIRouter(
 def criar_funcionario(funcionario: FuncionarioCreate, db: Session = Depends(get_db)):
     # Verifica se o CPF já está cadastrado
     if db.query(Funcionario).filter(Funcionario.email == funcionario.email).first():
-        raise HTTPException(status_code=400, detail="CPF já cadastrado")
+        raise HTTPException(status_code=400, detail="email já cadastrado")
     
     curso = db.query(Curso).filter(Curso.id == funcionario.curso_id).first()
     if not curso:
@@ -25,6 +25,7 @@ def criar_funcionario(funcionario: FuncionarioCreate, db: Session = Depends(get_
         codigo_cartao=funcionario.codigo_cartao,
         curso_id=funcionario.curso_id,
         cargo_id=funcionario.cargo_id,
+        nome=funcionario.nome,
     )
     
     db.add(novo_funcionario)

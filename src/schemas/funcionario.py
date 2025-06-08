@@ -1,3 +1,4 @@
+from typing import Optional
 from pydantic import BaseModel
 
 class FuncionarioBase(BaseModel):
@@ -5,6 +6,7 @@ class FuncionarioBase(BaseModel):
     codigo_cartao: str
     curso_id: int
     cargo_id: int
+    nome: Optional[str] = None
 class FuncionarioCreate(FuncionarioBase):
     pass
 

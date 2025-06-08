@@ -45,6 +45,7 @@ class EquipamentoResponse(BaseModel):
 class FuncionarioResponse(BaseModel):
     id: int
     email: str
+    nome: Optional[str] = None
     codigo_cartao: Optional[str] = None
     curso: Optional[CursoResponse] = None
     cargo: Optional[CargoResponse] = None
@@ -54,40 +55,24 @@ class FuncionarioResponse(BaseModel):
 
 class UsoEquipamentoResponse(BaseModel):
     protocolo: int
-    equipamento_codigo: str
     data_aluguel: datetime
     data_devolucao: Optional[datetime] = None
     status: StatusUsoEquipamento
-    equipamento: Optional[EquipamentoResponse] = None
-    funcionario: Optional[FuncionarioResponse] = None
+    equipamento: EquipamentoResponse
+    funcionario: FuncionarioResponse
 
     class Config:
         from_attributes = True
-        arbitrary_types_allowed = True
 
 @locacao_router.get("/", response_model=List[UsoEquipamentoResponse])
-async def listar_usos_equipamento(
-    skip: int = 0,
-    limit: int = 100,
-    db: Session = Depends(get_db)
-):
-    """
-    Lista todos os registros de uso de equipamento com seus relacionamentos.
-    """
-    usos = db.query(UsoEquipamento).options(
+def get_all_uso_equipamento(db: Session = Depends(get_db)):
+    uso_equipamentos = db.query(UsoEquipamento).options(
         joinedload(UsoEquipamento.equipamento),
         joinedload(UsoEquipamento.funcionario).joinedload(Funcionario.curso),
         joinedload(UsoEquipamento.funcionario).joinedload(Funcionario.cargo)
-    ).offset(skip).limit(limit).all()
+    ).all()
     
-    # Garantir que os campos opcionais sejam None quando não existirem
-    for uso in usos:
-        if not hasattr(uso, 'equipamento') or uso.equipamento is None:
-            uso.equipamento = None
-        if not hasattr(uso, 'funcionario') or uso.funcionario is None:
-            uso.funcionario = None
-    
-    return usos
+    return uso_equipamentos
 
 @locacao_router.get("/emprestimos-por-dia", response_model=List[DiaMaisUsadoViewResponse])
 async def listar_emprestimos_por_dia(

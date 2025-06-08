@@ -29,7 +29,11 @@ def read_cartoes(skip: int = 0, limit: int = 100, db: Session = Depends(get_db))
     """
     Retorna a lista de cartões não associados a funcionários.
     """
-    cartoes = db.query(Cartao).outerjoin(Funcionario).filter(Funcionario.codigo_cartao == None).offset(skip).limit(limit).all()
+    # Subquery para encontrar os códigos de cartão que estão em uso
+    cartoes_em_uso = db.query(Funcionario.codigo_cartao).filter(Funcionario.codigo_cartao != None).subquery()
+    
+    # Query principal para encontrar cartões não associados
+    cartoes = db.query(Cartao).filter(~Cartao.rfid.in_(cartoes_em_uso)).offset(skip).limit(limit).all()
     return cartoes
 
 @router_cartao.get("/{cartao_id}", response_model=CartaoInDB)
