@@ -1,7 +1,6 @@
 from sqlalchemy import Column, Integer, String, DateTime, Boolean, func
 from src.config.database.database import Base
 from sqlalchemy.orm import relationship
-from sqlalchemy import ForeignKey
 
 class Equipamento(Base):
     __tablename__ = "equipamento"
@@ -13,6 +12,7 @@ class Equipamento(Base):
     cor = Column(String(30))
     
     # Relacionamentos
+    tag = relationship("Tag", back_populates="equipamento")
     usos = relationship("UsoEquipamento", back_populates="equipamento")
     defeitos = relationship("Defeito", back_populates="equipamento")
     

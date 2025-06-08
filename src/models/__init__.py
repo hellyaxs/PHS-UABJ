@@ -5,4 +5,5 @@ from .funcionario import Funcionario
 from .usoequipamento import UsoEquipamento
 from .defeito import Defeito
 from .cartao import Cartao
+from .tags import Tag
 from .views.dia_mais_usado_view import EmprestimosPorDiaView
