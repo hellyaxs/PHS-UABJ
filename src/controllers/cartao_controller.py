@@ -24,8 +24,8 @@ def create_cartao(cartao: CartaoCreate, db: Session = Depends(get_db)):
     db.refresh(db_cartao)
     return db_cartao
 
-@router_cartao.get("/", response_model=List[CartaoInDB])
-def read_cartoes(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+@router_cartao.get("/nao_associados", response_model=List[CartaoInDB])
+def read_cartoes_nao_associados(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     """
     Retorna a lista de cartões não associados a funcionários.
     """
@@ -34,6 +34,16 @@ def read_cartoes(skip: int = 0, limit: int = 100, db: Session = Depends(get_db))
     
     # Query principal para encontrar cartões não associados
     cartoes = db.query(Cartao).filter(~Cartao.rfid.in_(cartoes_em_uso)).offset(skip).limit(limit).all()
+    return cartoes
+
+@router_cartao.get("/", response_model=List[CartaoInDB])
+def read_cartoes(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    """
+    Retorna a lista de cartões não associados a funcionários.
+    """
+    
+    # Query principal para encontrar cartões não associados
+    cartoes = db.query(Cartao).offset(skip).limit(limit).all()
     return cartoes
 
 @router_cartao.get("/{cartao_id}", response_model=CartaoInDB)
