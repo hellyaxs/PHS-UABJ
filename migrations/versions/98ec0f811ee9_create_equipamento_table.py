@@ -25,7 +25,7 @@ def upgrade() -> None:
         sa.Column('modelo', sa.String(length=100), nullable=True),
         sa.Column('marca', sa.String(length=100), nullable=True),
         sa.Column('cor', sa.String(length=30), nullable=True),
-        sa.PrimaryKeyConstraint('codigo_tombamento')
+        sa.PrimaryKeyConstraint('codigo_tombamento'),
     )
     op.create_index(op.f('ix_equipamento_codigo_tombamento'), 'equipamento', ['codigo_tombamento'], unique=False)
 
