@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from src.config.database.database import get_db
 from src.models.equipamento import Equipamento
 from src.schemas.equipamento import EquipamentoCreate
+from src.models.tags import Tag
 
 equipamento_router = APIRouter(
     prefix="/equipamentos",
@@ -25,6 +26,18 @@ def criar_equipamento(equipamento: EquipamentoCreate, db: Session = Depends(get_
     db.commit()
     db.refresh(novo_equipamento)
     return novo_equipamento
+
+@equipamento_router.get("/nao_associados")
+def listar_equipamentos_nao_associados(db: Session = Depends(get_db)):
+    """
+    Retorna a lista de equipamentos que não estão associados a uma tag.
+    """
+    # Subquery para encontrar os códigos de tombamento que estão em uso
+    equipamentos_associados = db.query(Tag.equipamento_codigo).filter(Tag.equipamento_codigo != None).subquery()
+    
+    # Query principal para encontrar equipamentos não associados
+    equipamentos = db.query(Equipamento).filter(~Equipamento.codigo_tombamento.in_(equipamentos_associados)).all()
+    return equipamentos
 
 @equipamento_router.get("/")
 def listar_equipamentos(db: Session = Depends(get_db)):
