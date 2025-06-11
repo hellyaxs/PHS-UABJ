@@ -3,6 +3,7 @@ from src.models.enums.status_de_uso import StatusUsoEquipamento
 from src.models.equipamento import Equipamento
 from src.models.funcionario import Funcionario
 from src.models.usoequipamento import UsoEquipamento
+from src.models.tags import Tag
 from src.websocket.card_socket import active_connections
 from src.config.database.database import get_db
 import json
@@ -29,19 +30,39 @@ async def handler_locacao_equipamento(payload):
         payload = json.loads(payload)
     
     db = next(get_db())
+    
+    # Busca o funcionário pelo código do cartão
     funcionario = db.query(Funcionario).filter(Funcionario.codigo_cartao == payload["codigo_cartao"]).first()
-    equipamento = db.query(Equipamento).filter(Equipamento.codigo_tombamento == payload["codigo_tombamento"]).first()
-    novo_uso_equipamento = UsoEquipamento(
-        equipamento_codigo=payload["codigo_tombamento"],
-        funcionario_id=funcionario.id,
-        data_aluguel=payload["data_aluguel"],
-        funcionario=funcionario,
-        equipamento=equipamento,
-        status=StatusUsoEquipamento.ALOCADO
-    )
-    db.add(novo_uso_equipamento)
+    if not funcionario:
+        raise Exception(f"Funcionário não encontrado com o código do cartão: {payload['codigo_cartao']}")
+    
+    # Busca as tags e seus equipamentos associados
+    tags = db.query(Tag).filter(Tag.rfid.in_(payload["tags"])).all()
+    if not tags:
+        raise Exception(f"Nenhuma tag encontrada com os RFIDs: {payload['tags']}")
+    
+    # Cria registros de uso para cada equipamento encontrado
+    for tag in tags:
+        if not tag.equipamento_codigo:
+            print(f"Aviso: Tag {tag.rfid} não está associada a nenhum equipamento")
+            continue
+            
+        equipamento = db.query(Equipamento).filter(Equipamento.codigo_tombamento == tag.equipamento_codigo).first()
+        if not equipamento:
+            print(f"Aviso: Equipamento não encontrado para a tag {tag.rfid}")
+            continue
+            
+        novo_uso_equipamento = UsoEquipamento(
+            equipamento_codigo=equipamento.codigo_tombamento,
+            funcionario_id=funcionario.id,
+            data_aluguel=datetime.now(),
+            funcionario=funcionario,
+            equipamento=equipamento,
+            status=StatusUsoEquipamento.ALOCADO
+        )
+        db.add(novo_uso_equipamento)
+    
     db.commit()
-    db.refresh(novo_uso_equipamento)
 
 
 
