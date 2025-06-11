@@ -5,7 +5,7 @@ from sqlalchemy.orm import relationship
 
 class Tag(Base):
     __tablename__ = "tags"
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     rfid = Column(String, unique=True, index=True)
     nome = Column(String, index=True)
     ultima_leitura = Column(DateTime)

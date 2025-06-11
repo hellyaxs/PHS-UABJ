@@ -21,11 +21,11 @@ depends_on: Union[str, Sequence[str], None] = None
 def upgrade() -> None:
     op.create_table(
         'tags',
-        sa.Column('id', sa.Integer, primary_key=True),
+        sa.Column('id', sa.Integer, primary_key=True, autoincrement=True),
         sa.Column('rfid', sa.String(255), nullable=False),
-        sa.Column('name', sa.String(255), nullable=False),
-        sa.Column('last_read', sa.DateTime, nullable=False),
-        sa.Column('access_level', sa.Integer, nullable=False),
+        sa.Column('nome', sa.String(255), nullable=False),
+        sa.Column('ultima_leitura', sa.DateTime, nullable=False),
+        sa.Column('nivel_acesso', sa.Integer, nullable=False),
         sa.Column('status', sa.String(255), nullable=False),
     )
     op.add_column('funcionario', sa.Column('nome', sa.String(255), nullable=True))

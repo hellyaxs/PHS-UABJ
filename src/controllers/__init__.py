@@ -6,6 +6,7 @@ from .funcionario_controller import funcionario_router
 from .cartao_controller import  router_cartao
 from .uso_equipamento_controller import locacao_router
 from .cargo_controller import router_cargo
+from .tag_controller import tag_router
 
 all_routers = [
     router_auth
@@ -19,4 +20,5 @@ protected_routers = [
     router_cartao,
     locacao_router, 
     router_cargo,
+    tag_router,
 ]
