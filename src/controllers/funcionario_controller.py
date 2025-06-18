@@ -1,14 +1,38 @@
 from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 from src.config.database.database import get_db
 from src.models.funcionario import Funcionario
 from src.models.curso import Curso
+from src.models.usoequipamento import UsoEquipamento
 from src.schemas.funcionario import FuncionarioCreate, Funcionario as FuncionarioSchema
 
 funcionario_router = APIRouter(
     prefix="/funcionarios",
     tags=["funcionarios"], 
 )
+
+@funcionario_router.get("/mais_uso")
+def funcionario_mais_uso(db: Session = Depends(get_db)):
+    """
+    Retorna o nome do funcionário que mais usou equipamentos.
+    """
+    # Query para contar usos por funcionário e pegar o com mais usos
+    funcionario_mais_uso = db.query(
+        Funcionario.nome,
+        func.count(UsoEquipamento.protocolo).label('total_usos')
+    ).join(UsoEquipamento, Funcionario.id == UsoEquipamento.funcionario_id)\
+     .group_by(Funcionario.id, Funcionario.nome)\
+     .order_by(func.count(UsoEquipamento.protocolo).desc())\
+     .first()
+    
+    if funcionario_mais_uso is None:
+        raise HTTPException(status_code=404, detail="Nenhum funcionário encontrado")
+    
+    return {
+        "nome": funcionario_mais_uso.nome,
+        "total_usos": funcionario_mais_uso.total_usos
+    } 
 
 @funcionario_router.post("/", response_model=FuncionarioSchema)
 def criar_funcionario(funcionario: FuncionarioCreate, db: Session = Depends(get_db)):
@@ -82,4 +106,6 @@ def deletar_funcionario(cpf: str, db: Session = Depends(get_db)):
     
     db.delete(funcionario)
     db.commit()
-    return {"message": "Funcionário deletado com sucesso"} 
+    return {"message": "Funcionário deletado com sucesso"}
+
+
