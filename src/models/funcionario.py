@@ -8,7 +8,7 @@ class Funcionario(Base):
     
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     email = Column(String(50), unique=True, index=True, nullable=False)
-    codigo_cartao = Column(String(10))
+    codigo_cartao = Column(String(10), nullable=True)
     nome = Column(String(100))
     curso_id = Column(Integer, ForeignKey("curso.id"), nullable=False)
     cargo_id = Column(Integer, ForeignKey("cargo.id"), nullable=False)

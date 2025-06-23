@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 from src.config.database.database import get_db
+from src.models.cartao import Cartao
 from src.models.funcionario import Funcionario
 from src.models.curso import Curso
 from src.models.usoequipamento import UsoEquipamento
@@ -46,7 +47,7 @@ def criar_funcionario(funcionario: FuncionarioCreate, db: Session = Depends(get_
     
     novo_funcionario = Funcionario(
         email=funcionario.email,
-        codigo_cartao=funcionario.codigo_cartao,
+        codigo_cartao=funcionario.codigo_cartao if funcionario.codigo_cartao else None,
         curso_id=funcionario.curso_id,
         cargo_id=funcionario.cargo_id,
         nome=funcionario.nome,
@@ -56,6 +57,14 @@ def criar_funcionario(funcionario: FuncionarioCreate, db: Session = Depends(get_
     db.commit()
     db.refresh(novo_funcionario)
     return novo_funcionario
+
+@funcionario_router.get("/nao_associados",response_model=list[FuncionarioSchema])
+def listar_funcionarios_nao_associados(db: Session = Depends(get_db)):
+    """
+    Retorna a lista de funcionários que não estão associados a um cartão.
+    """
+    funcionarios = db.query(Funcionario).filter(Funcionario.codigo_cartao == None).all()
+    return funcionarios
 
 @funcionario_router.get("/", response_model=list[FuncionarioSchema])
 def listar_funcionarios(db: Session = Depends(get_db)):

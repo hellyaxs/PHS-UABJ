@@ -18,10 +18,22 @@ def create_cartao(cartao: CartaoCreate, db: Session = Depends(get_db)):
     """
     Cria um novo cartão.
     """
-    db_cartao = Cartao(**cartao.model_dump())
+    # Filtra os dados para remover campos que não existem no modelo Cartao
+    cartao_data = cartao.model_dump()
+    funcionario_id = cartao_data.pop('funcionario_id', None)  # Remove funcionario_id dos dados
+    
+    db_cartao = Cartao(**cartao_data)
     db.add(db_cartao)
     db.commit()
     db.refresh(db_cartao)
+    
+    if funcionario_id:
+        funcionario = db.query(Funcionario).filter(Funcionario.id == funcionario_id).first()
+        if funcionario:
+            funcionario.codigo_cartao = cartao.rfid
+            db.commit()
+            db.refresh(funcionario)
+    
     return db_cartao
 
 @router_cartao.get("/nao_associados", response_model=List[CartaoInDB])

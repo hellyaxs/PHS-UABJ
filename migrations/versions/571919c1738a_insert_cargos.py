@@ -52,7 +52,7 @@ def upgrade() -> None:
     op.create_table('funcionario',
         sa.Column('id', sa.Integer(), nullable=False),
         sa.Column('email', sa.String(length=50), nullable=False),
-        sa.Column('codigo_cartao', sa.String(length=10), nullable=True),
+        sa.Column('codigo_cartao', sa.String(length=10), nullable=True, default=None),
         sa.Column('curso_id', sa.Integer(), nullable=False),
         sa.Column('cargo_id', sa.Integer(), nullable=False),
         sa.ForeignKeyConstraint(['cargo_id'], ['cargo.id'], ),

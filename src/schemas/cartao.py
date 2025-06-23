@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional
 from pydantic import BaseModel
 
 class CartaoBase(BaseModel):
@@ -6,6 +7,7 @@ class CartaoBase(BaseModel):
     rfid: str
     nivel_acesso: int
     status: str
+    funcionario_id: Optional[int] = None
 
 class CartaoCreate(CartaoBase):
     pass
