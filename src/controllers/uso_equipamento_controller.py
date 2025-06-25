@@ -9,7 +9,7 @@ from src.models.cargo import Cargo
 from src.models.usoequipamento import UsoEquipamento
 from src.models.enums.status_de_uso import StatusUsoEquipamento
 from pydantic import BaseModel
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from src.models.views.dia_mais_usado_view import DiaMaisUsadoViewResponse, EmprestimosPorDiaView
 
@@ -74,6 +74,25 @@ def get_all_uso_equipamento(db: Session = Depends(get_db)):
     
     return uso_equipamentos
 
+@locacao_router.get("/pendentes", response_model=List[FuncionarioResponse])
+async def listar_usos_pendentes(
+    db: Session = Depends(get_db)
+):
+    """
+    Lista todos os registros de uso de equipamento pendentes.
+    """
+    usos = db.query(UsoEquipamento).filter(UsoEquipamento.data_devolucao == None).all()
+    funcionarios = []
+    for uso in usos:
+        if uso.data_aluguel + timedelta(hours=8) < datetime.now():
+            funcionarios.append(uso.funcionario_id)
+            db.query(UsoEquipamento).filter(UsoEquipamento.protocolo == uso.protocolo).update({"status": StatusUsoEquipamento.PENDENTE})
+            db.commit()
+            db.refresh(uso)
+            
+    funcionarios = db.query(Funcionario).filter(Funcionario.id.in_(funcionarios)).all()
+    return funcionarios
+
 @locacao_router.get("/emprestimos-por-dia", response_model=List[DiaMaisUsadoViewResponse])
 async def listar_emprestimos_por_dia(
     db: Session = Depends(get_db)
@@ -118,3 +137,4 @@ async def listar_usos_por_equipamento(
     """
     usos = db.query(UsoEquipamento).filter(UsoEquipamento.equipamento_codigo == codigo).all()
     return usos
+

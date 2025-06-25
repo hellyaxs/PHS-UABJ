@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from src.models.enums.status_de_uso import StatusUsoEquipamento
 from src.models.equipamento import Equipamento
 from src.models.funcionario import Funcionario
@@ -7,7 +7,6 @@ from src.models.tags import Tag
 from src.websocket.card_socket import active_connections
 from src.config.database.database import get_db
 import json
-from sqlalchemy.orm import Session
 
 async def send_message_to_clients(message: str):
     """
@@ -32,14 +31,14 @@ async def handler_locacao_equipamento(payload):
     db = next(get_db())
     
     # Busca o funcionário pelo código do cartão
-    funcionario = db.query(Funcionario).filter(Funcionario.codigo_cartao == payload["codigo_cartao"]).first()
+    funcionario = db.query(Funcionario).filter(Funcionario.codigo_cartao == payload["professor_uid"]).first()
     if not funcionario:
-        raise Exception(f"Funcionário não encontrado com o código do cartão: {payload['codigo_cartao']}")
+        raise Exception(f"Funcionário não encontrado com o código do cartão: {payload['professor_uid']}")
     
     # Busca as tags e seus equipamentos associados
-    tags = db.query(Tag).filter(Tag.rfid.in_(payload["tags"])).all()
+    tags = db.query(Tag).filter(Tag.rfid.in_(payload["projetores"])).all()
     if not tags:
-        raise Exception(f"Nenhuma tag encontrada com os RFIDs: {payload['tags']}")
+        raise Exception(f"Nenhuma tag encontrada com os RFIDs: {payload['projetores']}")
     
     # Cria registros de uso para cada equipamento encontrado
     for tag in tags:
@@ -55,7 +54,7 @@ async def handler_locacao_equipamento(payload):
         novo_uso_equipamento = UsoEquipamento(
             equipamento_codigo=equipamento.codigo_tombamento,
             funcionario_id=funcionario.id,
-            data_aluguel=datetime.now(),
+            data_aluguel=datetime.strptime(payload['data_hora'], '%Y-%m-%d %H:%M:%S'),
             funcionario=funcionario,
             equipamento=equipamento,
             status=StatusUsoEquipamento.ALOCADO

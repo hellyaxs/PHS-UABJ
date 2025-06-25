@@ -27,7 +27,7 @@ def upgrade() -> None:
         sa.Column('funcionario_id', sa.Integer(), nullable=False),
         sa.Column('data_aluguel', sa.DateTime(), nullable=False, server_default=sa.text('now()')),
         sa.Column('data_devolucao', sa.DateTime(), nullable=True),
-        sa.Column('status', postgresql.ENUM('ALOCADO', 'DEVOLVIDO', 'EM_USO', name='statususoequipamento'), nullable=False, server_default='ALOCADO'),
+        sa.Column('status', postgresql.ENUM('ALOCADO', 'DEVOLVIDO', 'EM_USO', 'PENDENTE', name='statususoequipamento'), nullable=False, server_default='ALOCADO'),
         sa.ForeignKeyConstraint(['equipamento_codigo'], ['equipamento.codigo_tombamento'], ),
         sa.ForeignKeyConstraint(['funcionario_id'], ['funcionario.id'], ),
         sa.PrimaryKeyConstraint('protocolo')
