@@ -1,15 +1,14 @@
 from fastapi import Depends, FastAPI
-from src.config.cors import configure_cors
-from src.config.jwt import get_current_user
-from src.controllers import all_routers, protected_routers
-from src.config.mosquitto import mosquitto
-from src.events.handlers.process_handler import handle_message, handler_locacao_equipamento
-from src.config.settings import app_settings
-from src.websocket.card_socket import router as websocket_route
+from src.infra.config.security.cors import configure_cors
+from src.infra.config.security.jwt import get_current_user
+from src.infra.controllers import all_routers, protected_routers
+from src.infra.config.mosquitto import mosquitto
+from src.domain.events.handlers.process_handler import handle_message, handler_locacao_equipamento
+from src.infra.config.settings import app_settings
+from src.infra.websocket.card_socket import router as websocket_route
 
-from src.config.database.database import Base
-from src.config.database.database import engine
-from src.models import *
+from src.infra.config.database.database import Base, engine
+from src.domain.models import *
 
 Base.metadata.create_all(bind=engine)
 
@@ -17,7 +16,6 @@ app = FastAPI(
     title=app_settings.PROJECT_NAME,
     debug=app_settings.DEBUG,
 )
-
 
 # CORS
 configure_cors(app)
