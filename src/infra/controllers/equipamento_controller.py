@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from src.infra.config.database.database import get_db
 from src.domain.models.equipamento import Equipamento
 from src.infra.dto.equipamento import EquipamentoCreate
@@ -41,12 +41,16 @@ def listar_equipamentos_nao_associados(db: Session = Depends(get_db)):
 
 @equipamento_router.get("/")
 def listar_equipamentos(db: Session = Depends(get_db)):
-    equipamentos = db.query(Equipamento).all()
+    equipamentos = db.query(Equipamento).options(    
+        joinedload(Equipamento.defeito)
+    ).all()
     return equipamentos
 
 @equipamento_router.get("/{codigo}")
 def ler_equipamento(codigo: str, db: Session = Depends(get_db)):
-    equipamento = db.query(Equipamento).filter(Equipamento.codigo == codigo).first()
+    equipamento = db.query(Equipamento).options(    
+    joinedload(Equipamento.defeito)
+).filter(Equipamento.codigo_tombamento == codigo).first()
     if equipamento is None:
         raise HTTPException(status_code=404, detail="Equipamento não encontrado")
     return equipamento

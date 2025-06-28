@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, String, DateTime, Boolean, func
 from src.infra.config.database.database import Base
 from sqlalchemy.orm import relationship
 
+# Equipamento.py
 class Equipamento(Base):
     __tablename__ = "equipamento"
     
@@ -14,8 +15,9 @@ class Equipamento(Base):
     # Relacionamentos
     tag = relationship("Tag", back_populates="equipamento")
     usos = relationship("UsoEquipamento", back_populates="equipamento")
-    defeitos = relationship("Defeito", back_populates="equipamento")
+    defeito = relationship("Defeito", back_populates="equipamento", uselist=False)
     
     def __repr__(self):
         return f"Equipamento(codigo_tombamento={self.codigo_tombamento}, modelo={self.modelo})"
+
     

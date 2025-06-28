@@ -13,7 +13,7 @@ defeito_router = APIRouter(
 @defeito_router.post("/", response_model=DefeitoSchema)
 def criar_defeito(defeito: DefeitoCreate, db: Session = Depends(get_db)):
     # Verifica se o equipamento existe
-    equipamento = db.query(Equipamento).filter(Equipamento.codigo == defeito.equipamento_codigo).first()
+    equipamento = db.query(Equipamento).filter(Equipamento.codigo_tombamento == defeito.equipamento_codigo).first()
     if not equipamento:
         raise HTTPException(status_code=404, detail="Equipamento não encontrado")
     
@@ -52,7 +52,7 @@ def atualizar_defeito(defeito_id: int, defeito: DefeitoCreate, db: Session = Dep
     
     if defeito.equipamento_codigo:
         # Verifica se o novo equipamento existe
-        equipamento = db.query(Equipamento).filter(Equipamento.codigo == defeito.equipamento_codigo).first()
+        equipamento = db.query(Equipamento).filter(Equipamento.codigo_tombamento == defeito.equipamento_codigo).first()
         if not equipamento:
             raise HTTPException(status_code=404, detail="Equipamento não encontrado")
         defeito_existente.equipamento_codigo = defeito.equipamento_codigo
