@@ -35,6 +35,38 @@ O projeto estará disponível em:
 - Aplicação: http://localhost:8000
 - MQTT Broker: localhost:1883
 
+### 🧪 Testando a Persistência
+
+Para testar se a persistência de mensagens está funcionando corretamente:
+
+```bash
+# Instalar dependência para o teste
+pip install paho-mqtt
+
+# Executar o script de teste
+python test_persistencia.py
+```
+
+O script irá:
+1. Publicar mensagens com QoS 1
+2. Simular um serviço offline
+3. Conectar um novo subscriber
+4. Verificar se as mensagens foram recuperadas
+
+### 📊 Monitoramento
+
+Para verificar os logs e dados persistentes:
+
+```bash
+# Ver logs do Mosquitto
+docker logs demo_mosquitto-mosquitto-1
+
+# Entrar no container para verificar dados
+docker exec -it demo_mosquitto-mosquitto-1 sh
+ls -la /mosquitto/data/
+tail -f /mosquitto/log/mosquitto.log
+```
+
 ### Desenvolvimento Local
 
 1. Clone o repositório:
@@ -68,6 +100,14 @@ fastapi dev src/main.py
 | Aplicação      | Python     | Aplicação principal com FastAPI              |
 | Broker MQTT    | Mosquitto  | Broker MQTT para comunicação em tempo real   |
 | Container      | Docker     | Containerização da aplicação                 |
+
+## 📋 Funcionalidades
+
+### ✅ Persistência de Mensagens MQTT
+- **Mensagens persistentes**: As mensagens são armazenadas em disco mesmo quando não há clientes conectados
+- **Recuperação automática**: Quando o serviço volta online, recebe todas as mensagens não processadas
+- **QoS configurável**: Suporte a diferentes níveis de qualidade de serviço (0, 1, 2)
+- **Mensagens retidas**: Suporte a mensagens que são enviadas automaticamente para novos subscribers
 | Orquestração   | Docker Compose | Gerenciamento dos containers              |
 | Banco de Dados | PostgreSQL | Armazenamento persistente de dados           |
 

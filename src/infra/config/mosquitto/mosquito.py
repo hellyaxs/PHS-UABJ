@@ -34,13 +34,28 @@ class MosquittoClient():
         """Set the event loop for the Mosquito instance."""
         self._loop = loop
 
-    def publish(self, topic, payload):
-        self._client.publish(topic, payload)
+    def publish(self, topic, payload, qos=1, retain=False):
+        """
+        Publica uma mensagem com QoS configurável para garantir entrega
+        qos=0: At most once (sem garantia)
+        qos=1: At least once (garantia de entrega, pode duplicar)
+        qos=2: Exactly once (garantia de entrega única)
+        """
+        result = self._client.publish(topic, payload, qos=qos, retain=retain)
+        if result.rc != mqtt.MQTT_ERR_SUCCESS:
+            print(f"Erro ao publicar mensagem: {result.rc}")
+        return result
     
-    def subscribe(self, topic: str, callback: Callable[[str], None]):
+    def subscribe(self, topic: str, callback: Callable[[str], None], qos=1):
+        """
+        Inscreve em um tópico com QoS configurável
+        qos=1 garante que as mensagens sejam entregues mesmo se o cliente se desconectar
+        """
         self.topics.append(topic)
         self._callbacks[topic] = callback
-        self._client.subscribe(topic)
+        result = self._client.subscribe(topic, qos=qos)
+        if result[0] != mqtt.MQTT_ERR_SUCCESS:
+            print(f"Erro ao se inscrever no tópico {topic}: {result[0]}")
         self._client.loop_start()
         
 

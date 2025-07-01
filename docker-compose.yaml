@@ -64,6 +64,8 @@ services:
       - "9004:9001"
     volumes:
       - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - mosquitto_data:/mosquitto/data
+      - mosquitto_log:/mosquitto/log
     networks:
       - mosquitto_network
 
@@ -71,3 +73,7 @@ services:
 networks:
   mosquitto_network:
     driver: bridge
+
+volumes:
+  mosquitto_data:
+  mosquitto_log:
