@@ -8,7 +8,7 @@ class MosquittoClient():
         self.port = port
         self._callbacks: Dict[str, Callable[[str], None]] = {}
         self.topics: List[str] = []
-        self._client = mqtt.Client()
+        self._client = mqtt.Client(client_id="api_client", clean_session=False)
         self._client.connect(self.broker, self.port, 60)
         self._client.on_message = self._on_message
         self._loop = None
