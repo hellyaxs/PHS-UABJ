@@ -28,7 +28,6 @@ def upgrade() -> None:
         sa.Column('nivel_acesso', sa.Integer, nullable=False),
         sa.Column('status', sa.String(255), nullable=False),
     )
-    op.add_column('funcionario', sa.Column('nome', sa.String(255), nullable=True))
     pass
 
 

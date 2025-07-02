@@ -12,6 +12,7 @@ class DiaMaisUsadoViewResponse(BaseModel):
     total_emprestimos: int
     emprestimos_ativos: int
     emprestimos_devolvidos: int
+    nome_professor: str
 
 
 class EmprestimosPorDiaView(Base):
@@ -26,3 +27,4 @@ class EmprestimosPorDiaView(Base):
     total_emprestimos = Column(Integer)
     emprestimos_ativos = Column(Integer)
     emprestimos_devolvidos = Column(Integer)
+    nome_professor = Column(String(100))

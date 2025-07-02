@@ -18,11 +18,12 @@ branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
 def upgrade():
+    op.add_column('funcionario', sa.Column('nome', sa.String(255), nullable=True))
     # Query para PostgreSQL
     view_query_postgresql = """
     SELECT 
-        EXTRACT(DOW FROM data_aluguel) as dia_semana_num,
-        CASE EXTRACT(DOW FROM data_aluguel)
+        EXTRACT(DOW FROM ue.data_aluguel) as dia_semana_num,
+        CASE EXTRACT(DOW FROM ue.data_aluguel)
             WHEN 0 THEN 'Domingo'
             WHEN 1 THEN 'Segunda'
             WHEN 2 THEN 'Terça'
@@ -31,7 +32,7 @@ def upgrade():
             WHEN 5 THEN 'Sexta'
             WHEN 6 THEN 'Sábado'
         END as dia_semana,
-        CASE EXTRACT(DOW FROM data_aluguel)
+        CASE EXTRACT(DOW FROM ue.data_aluguel)
             WHEN 0 THEN 'Dom'
             WHEN 1 THEN 'Seg'
             WHEN 2 THEN 'Ter'
@@ -41,21 +42,24 @@ def upgrade():
             WHEN 6 THEN 'Sáb'
         END as dia_semana_abrev,
         COUNT(*) as total_emprestimos,
-        COUNT(CASE WHEN status = 'ALOCADO' THEN 1 END) as emprestimos_ativos,
-        COUNT(CASE WHEN status = 'DEVOLVIDO' THEN 1 END) as emprestimos_devolvidos,
-        DATE(data_aluguel) as data_referencia
-    FROM uso_equipamento
+        COUNT(CASE WHEN ue.status = 'ALOCADO' THEN 1 END) as emprestimos_ativos,
+        COUNT(CASE WHEN ue.status = 'DEVOLVIDO' THEN 1 END) as emprestimos_devolvidos,
+        DATE(ue.data_aluguel) as data_referencia,
+        f.nome as nome_professor
+    FROM uso_equipamento ue
+    JOIN funcionario f ON ue.funcionario_id = f.id
     GROUP BY 
-        EXTRACT(DOW FROM data_aluguel),
-        DATE(data_aluguel)
+        EXTRACT(DOW FROM ue.data_aluguel),
+        DATE(ue.data_aluguel),
+        f.nome
     ORDER BY dia_semana_num
     """
     
     # Query para MySQL/SQLite (sintaxe diferente)
     view_query_mysql = """
     SELECT 
-        DAYOFWEEK(data_aluguel) as dia_semana_num,
-        CASE DAYOFWEEK(data_aluguel)
+        DAYOFWEEK(ue.data_aluguel) as dia_semana_num,
+        CASE DAYOFWEEK(ue.data_aluguel)
             WHEN 1 THEN 'Domingo'
             WHEN 2 THEN 'Segunda'
             WHEN 3 THEN 'Terça'
@@ -64,7 +68,7 @@ def upgrade():
             WHEN 6 THEN 'Sexta'
             WHEN 7 THEN 'Sábado'
         END as dia_semana,
-        CASE DAYOFWEEK(data_aluguel)
+        CASE DAYOFWEEK(ue.data_aluguel)
             WHEN 1 THEN 'Dom'
             WHEN 2 THEN 'Seg'
             WHEN 3 THEN 'Ter'
@@ -74,13 +78,16 @@ def upgrade():
             WHEN 7 THEN 'Sáb'
         END as dia_semana_abrev,
         COUNT(*) as total_emprestimos,
-        COUNT(CASE WHEN status = 'ALOCADO' THEN 1 END) as emprestimos_ativos,
-        COUNT(CASE WHEN status = 'DEVOLVIDO' THEN 1 END) as emprestimos_devolvidos,
-        DATE(data_aluguel) as data_referencia
-    FROM uso_equipamento
+        COUNT(CASE WHEN ue.status = 'ALOCADO' THEN 1 END) as emprestimos_ativos,
+        COUNT(CASE WHEN ue.status = 'DEVOLVIDO' THEN 1 END) as emprestimos_devolvidos,
+        DATE(ue.data_aluguel) as data_referencia,
+        f.nome as nome_professor
+    FROM uso_equipamento ue
+    JOIN funcionario f ON ue.funcionario_id = f.id
     GROUP BY 
-        DAYOFWEEK(data_aluguel),
-        DATE(data_aluguel)
+        DAYOFWEEK(ue.data_aluguel),
+        DATE(ue.data_aluguel),
+        f.nome
     ORDER BY dia_semana_num
     """
     
