@@ -21,8 +21,10 @@ def create_cartao(cartao: CartaoCreate, db: Session = Depends(get_db)):
     # Filtra os dados para remover campos que não existem no modelo Cartao
     cartao_data = cartao.model_dump()
     funcionario_id = cartao_data.pop('funcionario_id', None)  # Remove funcionario_id dos dados
-    
+    if db.query(Cartao).filter(Cartao.rfid == cartao.rfid).first():
+        raise HTTPException(status_code=400, detail="Cartão já existe no sistema")
     db_cartao = Cartao(**cartao_data)
+
     db.add(db_cartao)
     db.commit()
     db.refresh(db_cartao)
