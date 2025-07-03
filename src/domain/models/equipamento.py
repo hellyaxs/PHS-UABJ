@@ -7,7 +7,7 @@ class Equipamento(Base):
     __tablename__ = "equipamento"
     
     codigo_tombamento = Column(String(50), primary_key=True, index=True) 
-    codigo_tag = Column(String(10), default="")  
+    codigo_tag = Column(String(100), default="")  
     modelo = Column(String(100))
     marca = Column(String(100))
     cor = Column(String(30))
