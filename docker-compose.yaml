@@ -16,6 +16,11 @@ services:
       - POSTGRES_PORT=${POSTGRES_PORT}
       - MQTT_BROKER=mosquitto
       - MQTT_PORT=${MQTT_PORT}
+      - EMAIL_HOST=${EMAIL_HOST}
+      - EMAIL_PORT=${EMAIL_PORT}
+      - EMAIL_USERNAME=${EMAIL_USERNAME}
+      - EMAIL_PASSWORD=${EMAIL_PASSWORD}
+      - EMAIL_FROM=${EMAIL_FROM}
     depends_on:
       mosquitto:
         condition: service_started

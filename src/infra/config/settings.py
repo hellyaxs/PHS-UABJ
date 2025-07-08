@@ -29,7 +29,15 @@ class AppSettings:
     API_V1_STR = "/api/v1"
     PROJECT_NAME = os.getenv("PROJECT_NAME", "FastAPI App")
 
+class EmailSettings:
+    EMAIL_HOST = os.getenv("EMAIL_HOST", "smtp.gmail.com")
+    EMAIL_PORT = int(os.getenv("EMAIL_PORT", "587"))
+    EMAIL_USERNAME = os.getenv("EMAIL_USERNAME", "")
+    EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD", "")
+    EMAIL_FROM = os.getenv("EMAIL_FROM", "noreply@example.com")
+
 # Instância única das configurações
 db_settings = DatabaseSettings()
 mqtt_settings = MQTTSettings()
 app_settings = AppSettings()
+email_settings = EmailSettings()

@@ -1,5 +1,6 @@
 from .user import User
 from .curso import Curso
+from .cargo import Cargo
 from .equipamento import Equipamento
 from .funcionario import Funcionario
 from .usoequipamento import UsoEquipamento

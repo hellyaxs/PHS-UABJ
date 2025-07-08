@@ -1,26 +1,15 @@
-from datetime import datetime, timezone
+from datetime import datetime
 from src.domain.models.enums.status_de_uso import StatusUsoEquipamento
 from src.domain.models.equipamento import Equipamento
 from src.domain.models.funcionario import Funcionario
 from src.domain.models.usoequipamento import UsoEquipamento
 from src.domain.models.tags import Tag
-from src.infra.websocket.card_socket import active_connections
+from src.infra.api.websocket.card_socket import send_message_to_clients
 from src.infra.config.database.database import get_db
 import json
 
-async def send_message_to_clients(message: str):
-    """
-    Sends a message to all active WebSocket connections.
-    """
-    for connection in active_connections:
-        try:
-            await connection.send_text(message)
-        except Exception as e:
-            print(f"Error sending message to client: {e}")
-
 
 async def handle_message(payload):
-    print("✅ Callback executado com mensagem:", payload)
     await send_message_to_clients(payload)
 
 async def handler_locacao_equipamento(payload):

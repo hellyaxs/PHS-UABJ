@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Prazo Ultrapassado</title>
+  </head>
+  <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+    <div style="max-width: 600px; margin: auto; background-color: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.05);">
+      <h2 style="color: #d32f2f;">⚠️ Prazo Ultrapassado</h2>
+      <p style="font-size: 16px; color: #333333;">
+        Olá <strong>{{nome_usuario}}</strong>,
+      </p>
+      <p style="font-size: 16px; color: #333333;">
+        Informamos que o prazo para devolução do equipamento abaixo foi ultrapassado:
+      </p>
+      <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+        <tr>
+          <td style="padding: 8px; background-color: #f0f0f0;"><strong>Equipamento</strong></td>
+          <td style="padding: 8px;">{{nome_equipamento}}</td>
+        </tr>
+        <tr>
+          <td style="padding: 8px; background-color: #f0f0f0;"><strong>Data de Retirada</strong></td>
+          <td style="padding: 8px;">{{data_retirada}}</td>
+        </tr>
+        <tr>
+          <td style="padding: 8px; background-color: #f0f0f0;"><strong>Data Limite</strong></td>
+          <td style="padding: 8px; color: #d32f2f;"><strong>{{data_limite}}</strong></td>
+        </tr>
+      </table>
+      <p style="font-size: 16px; color: #333333; margin-top: 20px;">
+        Pedimos que realize a devolução o quanto antes ou entre em contato com a equipe responsável.
+      </p>
+      <p style="font-size: 16px; color: #333333;">
+        Em caso de dúvidas, estamos à disposição.
+      </p>
+      <hr style="margin: 30px 0;" />
+      <p style="font-size: 14px; color: #888888;">
+        Este é um aviso automático, por favor, não responda este e-mail.
+      </p>
+    </div>
+  </body>
+</html>

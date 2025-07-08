@@ -5,6 +5,7 @@ class StatusUsoEquipamento(str, Enum):
     DEVOLVIDO = "DEVOLVIDO"
     EM_USO = "EM_USO"
     PENDENTE = "PENDENTE"
+    EMAIL_ENVIADO = "EMAIL_ENVIADO"
 
 class StatusTag(str, Enum):
     ATIVO = "ATIVO"
