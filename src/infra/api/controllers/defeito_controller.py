@@ -1,9 +1,13 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from datetime import datetime
+
 from src.infra.config.database.database import get_db
 from src.domain.models.defeito import Defeito
 from src.domain.models.equipamento import Equipamento
+from src.domain.models.usoequipamento import UsoEquipamento
 from src.infra.api.dto.defeito import DefeitoCreate, Defeito as DefeitoSchema
+from src.domain.models.enums.status_de_uso import StatusUsoEquipamento
 
 defeito_router = APIRouter(
     prefix="/defeitos",
@@ -20,7 +24,18 @@ def criar_defeito(defeito: DefeitoCreate, db: Session = Depends(get_db)):
     novo_defeito = Defeito(
         descricao=defeito.descricao,
         equipamento_codigo=defeito.equipamento_codigo
-    )
+    )   
+
+    usos_alocados = db.query(UsoEquipamento).filter(
+        UsoEquipamento.equipamento_codigo == defeito.equipamento_codigo,
+        UsoEquipamento.status == StatusUsoEquipamento.ALOCADO
+    ).all()
+    
+    # Atualizar cada uso encontrado
+    for uso in usos_alocados:
+        uso.data_devolucao = datetime.now()
+        uso.status = StatusUsoEquipamento.DEVOLVIDO_DEFEITO
+
     
     db.add(novo_defeito)
     db.commit()
