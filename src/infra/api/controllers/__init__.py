@@ -1,4 +1,4 @@
-from src.infra.controllers.auth_controller import router_auth
+from src.infra.api.controllers.auth_controller import router_auth
 from .equipamento_controller import equipamento_router
 from .defeito_controller import defeito_router
 from .curso_controller import curso_router

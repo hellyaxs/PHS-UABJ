@@ -5,7 +5,7 @@ from sqlalchemy import select
 from src.domain.models.equipamento import Equipamento
 from src.domain.models.tags import Tag
 from src.infra.config.database.database import get_db
-from src.infra.dto.equipamento import EquipamentoCreate
+from src.infra.api.dto.equipamento import EquipamentoCreate
 
 class EquipamentoRepository:
     def __init__(self, db: Session = Depends(get_db)):

@@ -5,7 +5,7 @@ from src.domain.models.curso import Curso
 from src.domain.models.usoequipamento import UsoEquipamento
 from src.infra.config.database.database import get_db
 from src.domain.models.funcionario import Funcionario
-from src.infra.dto.funcionario import FuncionarioCreate
+from src.infra.api.dto.funcionario import FuncionarioCreate
 
 class FuncionarioRepository:
     def __init__(self, db: Session = Depends(get_db)):

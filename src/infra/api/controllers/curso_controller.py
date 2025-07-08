@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from src.infra.config.database.database import get_db
 from src.infra.config.security.jwt import get_current_user
 from src.domain.models.curso import Curso
-from src.infra.dto.curso import CursoCreate, Curso as CursoSchema
+from src.infra.api.dto.curso import CursoCreate, Curso as CursoSchema
 
 curso_router = APIRouter(
     prefix="/cursos",

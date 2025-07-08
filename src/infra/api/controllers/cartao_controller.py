@@ -6,7 +6,7 @@ from src.domain.repositories.cartao_repository import CartaoRepository
 from src.infra.config.database.database import get_db
 from src.domain.models.cartao import Cartao
 from src.domain.models.funcionario import Funcionario
-from src.infra.dto.cartao import CartaoCreate, CartaoUpdate, CartaoInDB
+from src.infra.api.dto.cartao import CartaoCreate, CartaoUpdate, CartaoInDB
 
 router_cartao = APIRouter(
     prefix="/cartoes",

@@ -1,4 +1,3 @@
-
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from typing import List
 from src.infra.config.mosquitto import mosquitto
@@ -25,3 +24,14 @@ async def websocket_addcard_endpoint(websocket: WebSocket):
 
 def send_message_to_mosquitto(message: str):
     mosquitto.publish("add", message)
+
+
+async def send_message_to_clients(message: str):
+    """
+    Sends a message to all active WebSocket connections.
+    """
+    for connection in active_connections:
+        try:
+            await connection.send_text(message)
+        except Exception as e:
+            print(f"Error sending message to client: {e}")

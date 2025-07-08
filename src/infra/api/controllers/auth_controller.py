@@ -1,13 +1,12 @@
 from fastapi import APIRouter, Body, Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordRequestForm
 from passlib.context import CryptContext
 from src.infra.config.security.jwt import create_access_token, get_current_user
 from src.domain.models.user import User
-from src.infra.dto.auth import LoginRequest, LoginResponse, Token, UserResponse
+from src.infra.api.dto.auth import LoginRequest, LoginResponse, UserResponse
 from src.infra.config.database.database import get_db
 from sqlalchemy.orm import Session
 
-from src.infra.dto.userCreate import UserCreate
+from src.infra.api.dto.userCreate import UserCreate
 
 
 router_auth = APIRouter(

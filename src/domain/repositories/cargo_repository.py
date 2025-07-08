@@ -1,7 +1,7 @@
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 from src.domain.models.cargo import Cargo
-from src.infra.dto.cargo import CargoUpdate
+from src.infra.api.dto.cargo import CargoUpdate
 
 class CargoRepository:
     def __init__(self, db: Session):

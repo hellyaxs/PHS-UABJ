@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from src.domain.models.equipamento import Equipamento
 from src.domain.models.tags import Tag
 from src.infra.config.database.database import get_db
-from src.infra.dto.tag import TagCreate
+from src.infra.api.dto.tag import TagCreate
 from src.domain.models.enums.status_de_uso import StatusTag
 
 class TagRepository:

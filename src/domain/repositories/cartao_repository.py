@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from src.domain.models.cartao import Cartao
 from src.domain.models.funcionario import Funcionario
 from src.infra.config.database.database import get_db
-from src.infra.dto.cartao import CartaoCreate
+from src.infra.api.dto.cartao import CartaoCreate
 
 class CartaoRepository:
     def __init__(self, db: Session = Depends(get_db)):

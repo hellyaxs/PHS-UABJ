@@ -5,7 +5,7 @@ from typing import List
 from src.domain.repositories.cargo_repository import CargoRepository
 from src.infra.config.database.database import get_db
 from src.domain.models.cargo import Cargo
-from src.infra.dto.cargo import CargoCreate, CargoResponse, CargoUpdate
+from src.infra.api.dto.cargo import CargoCreate, CargoResponse, CargoUpdate
 
 router_cargo = APIRouter(
     prefix="/cargos",

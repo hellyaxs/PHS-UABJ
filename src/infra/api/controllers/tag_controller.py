@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List
 from src.domain.repositories.tag_repository import TagRepository
 from src.infra.config.database.database import get_db
-from src.infra.dto.tag import TagResponse, TagCreate, TagUpdate
+from src.infra.api.dto.tag import TagResponse, TagCreate, TagUpdate
 
 tag_router = APIRouter(
     prefix="/tags",

@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from src.infra.config.database.database import get_db
 from src.domain.models.defeito import Defeito
 from src.domain.models.equipamento import Equipamento
-from src.infra.dto.defeito import DefeitoCreate, Defeito as DefeitoSchema
+from src.infra.api.dto.defeito import DefeitoCreate, Defeito as DefeitoSchema
 
 defeito_router = APIRouter(
     prefix="/defeitos",

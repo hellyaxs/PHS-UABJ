@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from src.domain.repositories.funcionario_repository import FuncionarioRepository
 from src.infra.config.database.database import get_db
-from src.infra.dto.funcionario import FuncionarioCreate, Funcionario as FuncionarioSchema
+from src.infra.api.dto.funcionario import FuncionarioCreate, Funcionario as FuncionarioSchema
 
 funcionario_router = APIRouter(
     prefix="/funcionarios",

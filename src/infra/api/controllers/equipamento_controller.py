@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session, joinedload
 from src.domain.repositories.equipamento_repository import EquipamentoRepository
 from src.infra.config.database.database import get_db
 from src.domain.models.equipamento import Equipamento
-from src.infra.dto.equipamento import EquipamentoCreate
+from src.infra.api.dto.equipamento import EquipamentoCreate
 from src.domain.models.tags import Tag
 
 equipamento_router = APIRouter(
