@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List
 from src.domain.repositories.uso_equipamento import UsoEquipamentoRepository
 from src.infra.config.database.database import get_db
-from src.infra.api.dto.uso_equipamento import UsoEquipamentoResponse, FuncionarioResponse
+from src.infra.api.dto.uso_equipamento import UsoEquipamentoListResponsePaginated, UsoEquipamentoResponse, FuncionarioResponse
 from src.domain.models.views.dia_mais_usado_view import DiaMaisUsadoViewResponse
 
 locacao_router = APIRouter(
@@ -15,9 +15,10 @@ locacao_router = APIRouter(
 def get_uso_equipamento_repository(db: Session = Depends(get_db)) -> UsoEquipamentoRepository:
     return UsoEquipamentoRepository(db)
 
-@locacao_router.get("/", response_model=List[UsoEquipamentoResponse])
-def get_all_uso_equipamento(repo: UsoEquipamentoRepository = Depends(get_uso_equipamento_repository)):
-    return repo.get_all()
+@locacao_router.get("/", response_model=UsoEquipamentoListResponsePaginated)
+def get_all_uso_equipamento(skip: int = 0, limit: int = 100, repo: UsoEquipamentoRepository = Depends(get_uso_equipamento_repository)):
+    usos, total = repo.get_all(skip, limit)
+    return UsoEquipamentoListResponsePaginated(usos=usos, total=total)
 
 @locacao_router.get("/pendentes", response_model=List[FuncionarioResponse])
 async def listar_usos_pendentes(

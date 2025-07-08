@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import List, Optional
 from datetime import datetime
 from src.domain.models.enums.status_de_uso import StatusUsoEquipamento
 
@@ -48,3 +48,7 @@ class UsoEquipamentoResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+class UsoEquipamentoListResponsePaginated(BaseModel):
+    usos: List[UsoEquipamentoResponse]
+    total: int

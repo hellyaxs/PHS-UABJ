@@ -18,12 +18,17 @@ class UsoEquipamentoRepository:
         self.db.refresh(uso_equipamento)
         return uso_equipamento
     
-    def get_all(self):
-        return self.db.query(UsoEquipamento).options(
+    def get_all(self, skip: int = 0, limit: int = 100):
+        query = self.db.query(UsoEquipamento).options(
         joinedload(UsoEquipamento.equipamento),
         joinedload(UsoEquipamento.funcionario).joinedload(Funcionario.curso),
         joinedload(UsoEquipamento.funcionario).joinedload(Funcionario.cargo)
-        ).all()
+        )
+
+        total = query.count()
+        resultados = query.offset(skip).limit(limit).all() 
+
+        return resultados, total
  
 
     def get_by_id(self, id: int):
