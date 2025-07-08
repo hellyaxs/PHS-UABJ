@@ -1,4 +1,5 @@
 from datetime import datetime
+from src.domain.models.cartao import Cartao
 from src.domain.models.enums.status_de_uso import StatusUsoEquipamento
 from src.domain.models.equipamento import Equipamento
 from src.domain.models.funcionario import Funcionario
@@ -21,11 +22,12 @@ async def handler_locacao_equipamento(payload):
         db = next(get_db())
         # Busca o funcionário pelo código do cartão
         funcionario = db.query(Funcionario).filter(Funcionario.codigo_cartao == payload["professor_uid"]).first()
+        cartao = db.query(Cartao).filter(Cartao.rfid == payload["professor_uid"]).first()
+        tags = db.query(Tag).filter(Tag.rfid.in_(payload["projetores"])).all()
         if not funcionario:
             raise Exception(f"Funcionario nao encontrado com o codigo do cartao: {payload['professor_uid']}")
-        
-        # Busca as tags e seus equipamentos associados
-        tags = db.query(Tag).filter(Tag.rfid.in_(payload["projetores"])).all()
+        if not cartao:
+            raise Exception(f"Cartao nao encontrado com o codigo: {payload['professor_uid']}")
         if not tags:
             raise Exception(f"Nenhuma tag encontrada com os rfids: {payload['projetores']}")
         
@@ -34,7 +36,6 @@ async def handler_locacao_equipamento(payload):
             if not tag.equipamento_codigo:
                 raise Exception(f"Aviso: Tag {tag.rfid} nao esta associada a nenhum equipamento")
 
-                
             equipamento = db.query(Equipamento).filter(Equipamento.codigo_tombamento == tag.equipamento_codigo).first()
             if not equipamento:
                 raise Exception(f"Aviso: Equipamento nao encontrado para a tag {tag.rfid}")
@@ -49,6 +50,9 @@ async def handler_locacao_equipamento(payload):
                     status=StatusUsoEquipamento.ALOCADO
                 )
                 db.add(novo_uso_equipamento)
+                cartao.ultima_entrada = datetime.now()
+                db.commit()
+                db.refresh(cartao)
             else:
                 # Busca o último uso do equipamento para o professor
                 uso = (
