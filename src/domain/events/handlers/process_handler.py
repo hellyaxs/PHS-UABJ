@@ -3,6 +3,8 @@ from src.domain.models.cartao import Cartao
 from src.domain.models.enums.status_de_uso import StatusUsoEquipamento
 from src.domain.models.equipamento import Equipamento
 from src.domain.models.funcionario import Funcionario
+from src.domain.models.defeito import Defeito
+
 from src.domain.models.usoequipamento import UsoEquipamento
 from src.domain.models.tags import Tag
 from src.infra.api.websocket.card_socket import send_message_to_clients
@@ -39,7 +41,11 @@ async def handler_locacao_equipamento(payload):
             equipamento = db.query(Equipamento).filter(Equipamento.codigo_tombamento == tag.equipamento_codigo).first()
             if not equipamento:
                 raise Exception(f"Aviso: Equipamento nao encontrado para a tag {tag.rfid}")
-
+            
+            defeito_equipamento = db.query(Defeito).filter(Defeito.equipamento_codigo == equipamento.codigo_equipamento).first()
+            if defeito_equipamento is not None:
+                raise Exception("Projetor está com defeito, pegue outro que esteja disponível!")
+            
             if payload["acao"] == "locacao":    
                 novo_uso_equipamento = UsoEquipamento(
                     equipamento_codigo=equipamento.codigo_tombamento,
