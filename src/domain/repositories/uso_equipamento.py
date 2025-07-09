@@ -56,9 +56,9 @@ class UsoEquipamentoRepository:
         ).filter(UsoEquipamento.data_devolucao == None).all()
         funcionarios = []
         for uso in usos:
-            if uso.data_aluguel + timedelta(hours=8) < datetime.now() and uso.status != StatusUsoEquipamento.EMAIL_ENVIADO:
+            if uso.data_aluguel + timedelta(hours=8) < datetime.now():
                 funcionarios.append(uso.funcionario_id)
-                self.db.query(UsoEquipamento).filter(UsoEquipamento.protocolo == uso.protocolo).update({"status": StatusUsoEquipamento.PENDENTE})
+                # self.db.query(UsoEquipamento).filter(UsoEquipamento.protocolo == uso.protocolo).update({"status": StatusUsoEquipamento.PENDENTE})
                 self.db.commit()
                 self.db.refresh(uso)
                 

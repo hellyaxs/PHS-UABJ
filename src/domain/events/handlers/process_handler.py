@@ -42,7 +42,11 @@ async def handler_locacao_equipamento(payload):
             if not equipamento:
                 raise Exception(f"Aviso: Equipamento nao encontrado para a tag {tag.rfid}")
             
-            defeito_equipamento = db.query(Defeito).filter(Defeito.equipamento_codigo == equipamento.codigo_equipamento).first()
+            usoEquipamento = db.query(UsoEquipamento).filter(UsoEquipamento.equipamento_codigo == equipamento.codigo_tombamento, UsoEquipamento.funcionario_id == funcionario.id).first()
+            if usoEquipamento.data_devolucao is None:
+                raise Exception("Projetor não foi devolvido, portanto não pode ser alocado novamente!");
+
+            defeito_equipamento = db.query(Defeito).filter(Defeito.equipamento_codigo == equipamento.codigo_tombamento).first()
             if defeito_equipamento is not None:
                 raise Exception("Projetor está com defeito, pegue outro que esteja disponível!")
             
