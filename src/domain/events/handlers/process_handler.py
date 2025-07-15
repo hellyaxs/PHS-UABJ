@@ -41,16 +41,19 @@ async def handler_locacao_equipamento(payload):
             equipamento = db.query(Equipamento).filter(Equipamento.codigo_tombamento == tag.equipamento_codigo).first()
             if not equipamento:
                 raise Exception(f"Aviso: Equipamento nao encontrado para a tag {tag.rfid}")
-            
-            usoEquipamento = db.query(UsoEquipamento).filter(UsoEquipamento.equipamento_codigo == equipamento.codigo_tombamento, UsoEquipamento.funcionario_id == funcionario.id).first()
-            if usoEquipamento.data_devolucao is None:
-                raise Exception("Projetor não foi devolvido, portanto não pode ser alocado novamente!");
 
             defeito_equipamento = db.query(Defeito).filter(Defeito.equipamento_codigo == equipamento.codigo_tombamento).first()
             if defeito_equipamento is not None:
                 raise Exception("Projetor está com defeito, pegue outro que esteja disponível!")
             
-            if payload["acao"] == "locacao":    
+            if payload["acao"] == "locacao":   
+                usoEquipamento = db.query(UsoEquipamento).filter(
+                UsoEquipamento.equipamento_codigo == equipamento.codigo_tombamento,
+                UsoEquipamento.funcionario_id == funcionario.id
+                ).first()
+                if usoEquipamento and usoEquipamento.data_devolucao is None:
+                    raise Exception("Projetor nao foi devolvido, portanto nao pode ser alocado novamente!"); 
+            
                 novo_uso_equipamento = UsoEquipamento(
                     equipamento_codigo=equipamento.codigo_tombamento,
                     funcionario_id=funcionario.id,
@@ -64,7 +67,6 @@ async def handler_locacao_equipamento(payload):
                 db.commit()
                 db.refresh(cartao)
             else:
-                # Busca o último uso do equipamento para o professor
                 uso = (
                     db.query(UsoEquipamento)
                     .filter(
@@ -77,9 +79,9 @@ async def handler_locacao_equipamento(payload):
 
                 if uso:
                     uso.data_devolucao = datetime.now()
+                    uso.status = StatusUsoEquipamento.DEVOLVIDO
                     db.commit()
                     db.refresh(uso)
-        db.commit()
     except Exception as e:
         mosquitto.publish("erros/locacao", json.dumps({"mensagem": str(e), "status": 500}))
 
