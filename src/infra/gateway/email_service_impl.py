@@ -3,7 +3,7 @@ from src.application.gateway.email_adapter import Email, EmailAdapter
 import smtplib
 from email.message import EmailMessage
 from src.domain.models.enums.status_de_uso import StatusUsoEquipamento
-from src.domain.repositories.uso_equipamento import UsoEquipamentoRepository
+from src.domain.repositories.uso_equipamento_repository import UsoEquipamentoRepository
 from src.infra.config.settings import email_settings
 
 html_template = """

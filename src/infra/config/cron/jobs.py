@@ -1,5 +1,5 @@
 from apscheduler.schedulers.background import BackgroundScheduler
-from src.domain.repositories.uso_equipamento import UsoEquipamentoRepository
+from src.domain.repositories.uso_equipamento_repository import UsoEquipamentoRepository
 from src.infra.gateway.email_service_impl import EmailServiceImpl
 from src.infra.config.database.database import get_db
 

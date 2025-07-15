@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from typing import List
-from src.domain.repositories.uso_equipamento import UsoEquipamentoRepository
+from src.domain.models.views.emprestimos_por_dia_mes import EmprestimosPorDiaMesResponse
+from src.domain.repositories.uso_equipamento_repository import UsoEquipamentoRepository
 from src.infra.config.database.database import get_db
 from src.infra.api.dto.uso_equipamento import UsoEquipamentoListResponsePaginated, UsoEquipamentoResponse, FuncionarioResponse
 from src.domain.models.views.dia_mais_usado_view import DiaMaisUsadoViewResponse
@@ -32,6 +33,12 @@ async def listar_emprestimos_por_dia(
     repo: UsoEquipamentoRepository = Depends(get_uso_equipamento_repository)
 ):
     return repo.get_emprestimos_por_dia()
+
+@locacao_router.get("/emprestimos-por-dia-mes", response_model=List[EmprestimosPorDiaMesResponse])
+async def listar_emprestimos_por_dia_mes(
+    repo: UsoEquipamentoRepository = Depends(get_uso_equipamento_repository)
+):
+    return repo.get_emprestimos_por_dia_mes()
 
 @locacao_router.get("/{protocolo}", response_model=UsoEquipamentoResponse)
 async def obter_uso_equipamento(

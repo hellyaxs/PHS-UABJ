@@ -6,6 +6,7 @@ from src.domain.models.enums.status_de_uso import StatusUsoEquipamento
 from src.domain.models.funcionario import Funcionario
 from src.domain.models.usoequipamento import UsoEquipamento
 from src.domain.models.views.dia_mais_usado_view import EmprestimosPorDiaView
+from src.domain.models.views.emprestimos_por_dia_mes import EmprestimosPorDiaMes
 from src.infra.api.dto.uso_equipamento import UsoEquipamentoResponse
 
 class UsoEquipamentoRepository:
@@ -67,6 +68,9 @@ class UsoEquipamentoRepository:
     
     def get_emprestimos_por_dia(self):
         return self.db.query(EmprestimosPorDiaView).all()
+    
+    def get_emprestimos_por_dia_mes(self):
+        return self.db.query(EmprestimosPorDiaMes).all()
     
     def get_by_equipamento_codigo(self, codigo: str) -> List[UsoEquipamentoResponse]:
         return self.db.query(UsoEquipamento).filter(UsoEquipamento.equipamento_codigo == codigo).all()
