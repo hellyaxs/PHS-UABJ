@@ -1,3 +1,4 @@
+from datetime import datetime
 from fastapi import Depends, HTTPException
 from sqlalchemy.orm import Session
 
@@ -20,6 +21,7 @@ class CartaoRepository:
         if self.db.query(Cartao).filter(Cartao.rfid == cartao.rfid).first():
             raise HTTPException(status_code=400, detail="Cartão já existe no sistema")
         db_cartao = Cartao(**cartao_data)
+        db_cartao.ultima_entrada = datetime.now()
 
         self.db.add(db_cartao)
         self.db.commit()
