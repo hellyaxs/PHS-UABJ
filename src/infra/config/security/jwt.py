@@ -10,7 +10,7 @@ from src.domain.models.user import User
 
 SECRET_KEY = os.getenv("JWT_SECRET", "chave_secreta")
 ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
-ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv("JWT_EXPIRATION", 60)
+ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv("JWT_EXPIRATION", 60 * 24) # 1 dia
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
