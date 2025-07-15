@@ -76,3 +76,14 @@ class TagRepository:
         self.db.delete(db_tag)
         self.db.commit()
         return {"message": "Tag removida com sucesso"} 
+    
+    def toggle_status(self, tag_rfid: str, status: bool):
+        """
+        Alterna o status de uma tag.
+        """
+        db_tag = self.db.query(Tag).filter(Tag.rfid == tag_rfid).first()
+        if not db_tag:
+            raise HTTPException(status_code=404, detail="Tag não encontrada")
+        db_tag.status = StatusTag.ATIVO if status else StatusTag.INATIVO
+        self.db.commit()
+        return db_tag

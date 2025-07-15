@@ -26,6 +26,10 @@ def create_tag(tag: TagCreate, db: Session = Depends(get_db)):
 def update_tag(tag_id: int, tag: TagUpdate, db: Session = Depends(get_db)):
     return TagRepository(db).update(tag_id, tag)
 
+@tag_router.patch("/{tag_id}", status_code=200)
+def patch_tag(tag_id: str, status: bool, db: Session = Depends(get_db)):
+    return TagRepository(db).toggle_status(tag_id, status)
+
 @tag_router.delete("/{tag_id}")
 def delete_tag(tag_id: int, db: Session = Depends(get_db)):
     return TagRepository(db).delete(tag_id)

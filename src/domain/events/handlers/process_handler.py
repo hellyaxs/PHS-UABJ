@@ -1,6 +1,6 @@
 from datetime import datetime
 from src.domain.models.cartao import Cartao
-from src.domain.models.enums.status_de_uso import StatusUsoEquipamento
+from src.domain.models.enums.status_de_uso import StatusTag, StatusUsoEquipamento
 from src.domain.models.equipamento import Equipamento
 from src.domain.models.funcionario import Funcionario
 from src.domain.models.defeito import Defeito
@@ -25,7 +25,7 @@ async def handler_locacao_equipamento(payload):
         # Busca o funcionário pelo código do cartão
         funcionario = db.query(Funcionario).filter(Funcionario.codigo_cartao == payload["professor_uid"]).first()
         cartao = db.query(Cartao).filter(Cartao.rfid == payload["professor_uid"]).first()
-        tags = db.query(Tag).filter(Tag.rfid.in_(payload["projetores"])).all()
+        tags = db.query(Tag).filter(Tag.rfid.in_(payload["projetores"]), Tag.status == StatusTag.ATIVO).all()
         if not funcionario:
             raise Exception(f"Funcionario nao encontrado com o codigo do cartao: {payload['professor_uid']}")
         if not cartao:
