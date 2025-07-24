@@ -15,7 +15,12 @@ class Equipamento(Base):
     # Relacionamentos
     tag = relationship("Tag", back_populates="equipamento")
     usos = relationship("UsoEquipamento", back_populates="equipamento")
-    defeito = relationship("Defeito", back_populates="equipamento", uselist=False)
+    defeito = relationship(
+        "Defeito",
+        back_populates="equipamento",
+        uselist=False,
+        cascade="all, delete-orphan"
+    )
     
     def __repr__(self):
         return f"Equipamento(codigo_tombamento={self.codigo_tombamento}, modelo={self.modelo})"
