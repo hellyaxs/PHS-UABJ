@@ -3,7 +3,6 @@ from typing import Optional
 from pydantic import BaseModel
 
 class CartaoBase(BaseModel):
-    nome: str
     rfid: str
     nivel_acesso: int
     status: str
@@ -14,7 +13,6 @@ class CartaoCreate(CartaoBase):
     pass
 
 class CartaoUpdate(CartaoBase):
-    nome: str | None = None
     rfid: str | None = None
     nivel_acesso: int | None = None
     status: str | None = None

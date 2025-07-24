@@ -6,7 +6,6 @@ class Cartao(Base):
     __tablename__ = "cartao"
     
     id: int = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    nome: str = Column(String(150), nullable=False)
     rfid: str = Column(String(50), nullable=False, unique=True)
     nivel_acesso: int = Column(Integer, nullable=False)
     status: str = Column(String(50), nullable=False)
