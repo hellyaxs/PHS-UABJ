@@ -104,11 +104,10 @@ class FuncionarioRepository:
         funcionarios = self.db.query(Funcionario).filter(Funcionario.codigo_cartao == None).all()
         return funcionarios
     
-    def delete(self, cpf: str):
-        funcionario = self.db.query(Funcionario).filter(Funcionario.cpf == cpf).first()
+    def delete(self, email: str):
+        funcionario = self.db.query(Funcionario).filter(Funcionario.email == email).first()
         if funcionario is None:
             raise HTTPException(status_code=404, detail="Funcionário não encontrado")
-        
         self.db.delete(funcionario)
         self.db.commit()
-        return {"message": "Funcionário deletado com sucesso"}
+        return {"detail": "Funcionário deletado com sucesso"}

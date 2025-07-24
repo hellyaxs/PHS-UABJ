@@ -37,8 +37,8 @@ def listar_funcionarios_curso(curso_id: int, db: Session = Depends(get_db)):
 def atualizar_funcionario(cpf: str, funcionario: FuncionarioCreate, db: Session = Depends(get_db)):
     return FuncionarioRepository(db).update(cpf, funcionario)
 
-@funcionario_router.delete("/{cpf}")
-def deletar_funcionario(cpf: str, db: Session = Depends(get_db)):
-    return FuncionarioRepository(db).delete(cpf)
+@funcionario_router.delete("/{email}")
+def deletar_funcionario(email: str, db: Session = Depends(get_db)):
+    return FuncionarioRepository(db).delete(email)
 
 
