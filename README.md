@@ -1,4 +1,4 @@
-# Projeto Hardware e software 
+# Projeto Hardware e software
 
 Este projeto é uma demonstração de integração com o broker MQTT Mosquitto usando Python.
 
@@ -26,7 +26,16 @@ git clone https://github.com/seu-usuario/demo_mosquitto.git
 cd demo_mosquitto
 ```
 
-2. Execute o projeto com Docker Compose:
+2. Configure as variáveis de ambiente:
+```bash
+# Copie o arquivo de exemplo
+cp .env.example .env
+
+# Edite o arquivo .env com suas configurações
+nano .env
+```
+
+3. Execute o projeto com Docker Compose:
 ```bash
 docker-compose up -d
 ```
@@ -34,6 +43,16 @@ docker-compose up -d
 O projeto estará disponível em:
 - Aplicação: http://localhost:8000
 - MQTT Broker: localhost:1883
+
+### 🔐 Usuário Padrão
+
+O sistema automaticamente cria um usuário padrão através das migrations do Alembic:
+
+- **Email**: `admin@exemplo.com`
+- **Senha**: `senha123`
+- **Nome**: `Administrador`
+
+**Nota**: O usuário padrão é criado automaticamente durante a execução das migrations do banco de dados.
 
 ### 🧪 Testando a Persistência
 

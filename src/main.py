@@ -10,7 +10,7 @@ from src.infra.config.cron.jobs import start_scheduler, stop_scheduler
 from src.infra.config.database.database import Base, engine
 from src.domain.models import *
 
-Base.metadata.create_all(bind=engine) 
+Base.metadata.create_all(bind=engine, checkfirst=True) 
 
 app = FastAPI(
     title=app_settings.PROJECT_NAME,

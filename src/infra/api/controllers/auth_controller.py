@@ -5,6 +5,7 @@ from src.domain.models.user import User
 from src.infra.api.dto.auth import LoginRequest, LoginResponse, UserResponse
 from src.infra.config.database.database import get_db
 from sqlalchemy.orm import Session
+from src.infra.config.settings import pwd_context
 
 from src.infra.api.dto.userCreate import UserCreate
 
@@ -13,7 +14,6 @@ router_auth = APIRouter(
     prefix="/auth",
     tags=["auth"]
 )
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
@@ -72,3 +72,5 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
 )
 def is_valid_token(current_user: User = Depends(get_current_user)):
     return UserResponse.from_orm(current_user)
+
+    

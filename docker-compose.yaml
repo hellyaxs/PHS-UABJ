@@ -21,11 +21,16 @@ services:
       - EMAIL_USERNAME=${EMAIL_USERNAME}
       - EMAIL_PASSWORD=${EMAIL_PASSWORD}
       - EMAIL_FROM=${EMAIL_FROM}
+      - DEFAULT_USER_EMAIL=${DEFAULT_USER_EMAIL}
+      - DEFAULT_USER_PASSWORD=${DEFAULT_USER_PASSWORD}
+      - DEFAULT_USER_FULL_NAME=${DEFAULT_USER_FULL_NAME}
     depends_on:
       mosquitto:
         condition: service_started
       postgres_db:
         condition: service_healthy
+      migrations:
+        condition: service_started
   postgres_db:
     image: postgres:15
     environment:
@@ -56,6 +61,9 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_HOST=postgres_db
       - POSTGRES_PORT=${POSTGRES_PORT}
+      - DEFAULT_USER_EMAIL=${DEFAULT_USER_EMAIL}
+      - DEFAULT_USER_PASSWORD=${DEFAULT_USER_PASSWORD}
+      - DEFAULT_USER_FULL_NAME=${DEFAULT_USER_FULL_NAME}
     networks:
       - mosquitto_network
     depends_on:
