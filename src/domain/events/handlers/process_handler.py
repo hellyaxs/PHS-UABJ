@@ -1,3 +1,4 @@
+import asyncio
 from datetime import datetime
 from src.domain.models.cartao import Cartao
 from src.domain.models.enums.status_de_uso import StatusTag, StatusUsoEquipamento
@@ -66,6 +67,7 @@ async def handler_locacao_equipamento(payload):
                 cartao.ultima_entrada = datetime.now()
                 db.commit()
                 db.refresh(cartao)
+                await send_message_to_clients(json.dumps({"codigo_equipamento": novo_uso_equipamento.equipamento.codigo_tombamento}))
             else:
                 uso = (
                     db.query(UsoEquipamento)
@@ -82,6 +84,7 @@ async def handler_locacao_equipamento(payload):
                     uso.status = StatusUsoEquipamento.DEVOLVIDO
                     db.commit()
                     db.refresh(uso)
+                    await send_message_to_clients(json.dumps({"codigo_equipamento": uso.equipamento.codigo_tombamento}))
     except Exception as e:
         mosquitto.publish("erros/locacao", json.dumps({"mensagem": str(e), "status": 500}))
 

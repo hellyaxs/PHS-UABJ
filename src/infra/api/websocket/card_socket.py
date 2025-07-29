@@ -15,15 +15,26 @@ async def websocket_addcard_endpoint(websocket: WebSocket):
     await websocket.send_text("Você está inscrito para receber atualizações de 'add' (via router).")
     try:
         while True:
-            data = await websocket.receive_text()
-            send_message_to_mosquitto(data)
+            # Mantém a conexão ativa sem processar dados recebidos
+            await websocket.receive_text()
     except WebSocketDisconnect:
         active_connections.remove(websocket)
         print(f"Cliente desconectado (via router) a /add: {websocket.client}")
 
+@router.websocket("/newuso")
+async def websocket_newuso_endpoint(websocket: WebSocket):
+    await websocket.accept()
+    active_connections.append(websocket)
+    print(f"Cliente conectado (via router) a /newuso: {websocket.client}")
+    try:
+        while True:
+            # Mantém a conexão ativa sem processar dados recebidos
+            await websocket.receive_text()
+    except WebSocketDisconnect:
+        active_connections.remove(websocket)
+        print(f"Cliente desconectado (via router) a /newuso: {websocket.client}")
+    
 
-def send_message_to_mosquitto(message: str):
-    mosquitto.publish("add", message)
 
 
 async def send_message_to_clients(message: str):
