@@ -1,7 +1,38 @@
+# Arquivos e pastas de desenvolvimento
 demo/
 .env
 .env.**
 .git/
 .gitignore
-mosquitto.conf
 README.md
+Dockerfile
+app.py
+docker-compose.yaml
+
+# Cache Python - remove todos os arquivos .pyc e pastas __pycache__
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+
+# Arquivos de configuração local
+mosquitto.conf
+
+# Logs e arquivos temporários
+*.log
+*.tmp
+*.temp
+
+# IDEs e editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Arquivos de distribuição Python
+*.egg-info/
+dist/
+build/
